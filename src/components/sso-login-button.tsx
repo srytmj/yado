@@ -9,7 +9,7 @@ export function SsoLoginButton({ size = "md" }: { size?: "sm" | "md" }) {
     <a
       href={buildSsoLoginUrl()}
       className={cn(
-        "group inline-flex items-center gap-1.5 rounded-full bg-white font-medium text-black transition hover:bg-white/90",
+        "group inline-flex items-center gap-1.5 rounded-full bg-foreground font-medium text-background transition hover:bg-foreground/90",
         size === "sm" ? "px-4 py-1.5 text-sm" : "px-6 py-3 text-base",
       )}
     >

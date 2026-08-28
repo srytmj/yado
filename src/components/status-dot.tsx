@@ -5,7 +5,7 @@ type Status = "up" | "down" | "unknown";
 const styles: Record<Status, { dot: string; ring: string }> = {
   up: { dot: "bg-emerald-400", ring: "bg-emerald-400/40" },
   down: { dot: "bg-red-400", ring: "bg-red-400/40" },
-  unknown: { dot: "bg-white/30", ring: "bg-white/10" },
+  unknown: { dot: "bg-foreground/30", ring: "bg-foreground/10" },
 };
 
 export function StatusDot({ status }: { status: Status }) {
