@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { ArrowLeft, BookOpen, ShieldCheck, Sparkles, Terminal, Code2, ExternalLink } from "lucide-react";
+import { ArrowLeft, BookOpen, ShieldCheck, Sparkles, Terminal, Code2, ExternalLink, Bot, Activity } from "lucide-react";
 
 const container = {
   hidden: { opacity: 0 },
@@ -210,6 +210,95 @@ export default function DocsPage() {
             <p className="text-xs text-foreground/50">
               Upon successful verification on the SSO portal, session credentials grant immediate access across target microservices without repeated logins.
             </p>
+          </div>
+        </motion.section>
+
+        {/* Section 4: Telemetry & Incident Management */}
+        <motion.section variants={item}>
+          <h2 className="text-xl font-semibold tracking-tight text-foreground mb-4">
+            4. Telemetry & Incident Reporting (AI & Homelab Workflows)
+          </h2>
+          <p className="text-foreground/70 mb-6 leading-relaxed">
+            Incident post-mortems, 90-day downtime records, and scheduled maintenance announcements displayed on the{" "}
+            <Link href="/status" className="underline underline-offset-4 hover:text-foreground">
+              /status telemetry portal
+            </Link>{" "}
+            are driven from <code className="font-mono text-xs bg-foreground/10 px-1 py-0.5 rounded">src/data/incidents.json</code>. You can manage them either via natural language AI or CLI commands.
+          </p>
+
+          <div className="grid gap-6">
+            {/* AI Assistant Prompts Box */}
+            <div className="rounded-2xl border border-sky-500/20 bg-sky-500/[0.03] p-6 space-y-4">
+              <div className="flex items-center gap-2 font-semibold text-sky-400">
+                <Bot className="h-4 w-4" />
+                <span>Method A: Natural Language via AI (Claude Code, Gemini CLI, Antigravity)</span>
+              </div>
+              <p className="text-xs text-foreground/70 leading-relaxed">
+                When working inside this repository with an AI assistant, you can simply issue conversational instructions. The AI automatically consults <code className="font-mono text-[11px] bg-foreground/10 px-1 py-0.5 rounded">AGENTS.md</code>, formats the incident, calculates UTC timestamps, and commits the entry:
+              </p>
+              <div className="space-y-2 font-mono text-xs">
+                <div className="rounded-xl border border-foreground/10 bg-background/80 p-3 text-foreground/80">
+                  <span className="text-sky-400 font-bold">&gt; Prompt: </span>
+                  &quot;Service malas tadi crash 20 menit karena memory leak, tolong catat insidennya.&quot;
+                </div>
+                <div className="rounded-xl border border-foreground/10 bg-background/80 p-3 text-foreground/80">
+                  <span className="text-sky-400 font-bold">&gt; Prompt: </span>
+                  &quot;Besok jam 2 pagi ada maintenance restart homelab buat pasang RAM 30 menit. Masukkan ke status page.&quot;
+                </div>
+                <div className="rounded-xl border border-foreground/10 bg-background/80 p-3 text-foreground/80">
+                  <span className="text-sky-400 font-bold">&gt; Prompt: </span>
+                  &quot;Insiden libs kemarin udah selesai investigasinya, update statusnya ke resolved.&quot;
+                </div>
+              </div>
+            </div>
+
+            {/* Terminal CLI Commands Box */}
+            <div className="rounded-2xl border border-foreground/10 bg-foreground/[0.02] p-6 space-y-4">
+              <div className="flex items-center gap-2 font-semibold text-foreground">
+                <Terminal className="h-4 w-4 text-emerald-400" />
+                <span>Method B: Interactive CLI Commands</span>
+              </div>
+              <p className="text-xs text-foreground/60 leading-relaxed">
+                For direct terminal execution or scripted automation in your homelab environment:
+              </p>
+              <div className="space-y-3 font-mono text-xs">
+                <div>
+                  <div className="text-foreground/50 text-[11px] mb-1 font-sans">1. View active & past incidents:</div>
+                  <div className="rounded-xl bg-foreground/5 p-3 text-foreground/80 overflow-x-auto">
+                    npm run incident:list
+                  </div>
+                </div>
+                <div>
+                  <div className="text-foreground/50 text-[11px] mb-1 font-sans">2. Create a new incident or maintenance announcement:</div>
+                  <div className="rounded-xl bg-foreground/5 p-3 text-foreground/80 overflow-x-auto">
+                    npm run incident:create -- --title=&quot;SSO Key Rotation&quot; --service=sso --severity=maintenance --duration=&quot;15 minutes&quot; --message=&quot;Rotating active JWT signing keys.&quot;
+                  </div>
+                </div>
+                <div>
+                  <div className="text-foreground/50 text-[11px] mb-1 font-sans">3. Add an investigation update to an active incident:</div>
+                  <div className="rounded-xl bg-foreground/5 p-3 text-foreground/80 overflow-x-auto">
+                    npm run incident:update -- --id=inc-01 --status=Monitoring --message=&quot;Patch applied, tracking response latency.&quot;
+                  </div>
+                </div>
+                <div>
+                  <div className="text-foreground/50 text-[11px] mb-1 font-sans">4. Mark incident as resolved:</div>
+                  <div className="rounded-xl bg-foreground/5 p-3 text-foreground/80 overflow-x-auto">
+                    npm run incident:resolve -- --id=inc-01 --message=&quot;Root cause mitigated. Normal latency restored.&quot;
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Direct JSON Edit Box */}
+            <div className="rounded-2xl border border-foreground/10 bg-foreground/[0.02] p-6 space-y-3">
+              <div className="flex items-center gap-2 font-semibold text-foreground">
+                <Activity className="h-4 w-4 text-purple-400" />
+                <span>Method C: Direct GitOps / JSON Edit</span>
+              </div>
+              <p className="text-xs text-foreground/60 leading-relaxed">
+                You can also directly edit <code className="font-mono text-xs bg-foreground/10 px-1 py-0.5 rounded">src/data/incidents.json</code> in VS Code or via the GitHub web editor. Modifying the file triggers instant hot-reloading in development and updates the live production status page immediately upon deployment.
+              </p>
+            </div>
           </div>
         </motion.section>
       </div>

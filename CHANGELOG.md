@@ -28,6 +28,8 @@ Pemisahan Data Insiden, CLI Helper, dan Dokumentasi Dual-Mode (AI + Human):
   - Menambahkan Aturan 6: Protokol Standar AI Agent untuk logging insiden, konversi waktu UTC, format ID, dan validasi build.
 - `README.md`:
   - Menambahkan panduan komprehensif dengan trigger khusus: `## 🤖 If you are an AI Assistant (Claude Code, Gemini CLI, Cursor, Antigravity) — READ THIS` serta panduan praktis untuk Product Owner homelab (via AI, via CLI, via JSON langsung, dan webhook otomatis Uptime Kuma).
+- `src/app/docs/page.tsx`:
+  - Menambahkan Seksi 4: "Telemetry & Incident Reporting (AI & Homelab Workflows)" pada halaman dokumentasi web resmi (`/docs`) lengkap dengan box contoh prompt AI conversational, perintah terminal CLI, dan panduan GitOps JSON.
 
 ### v0.2.15 - 2026-09-05
 
