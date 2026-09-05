@@ -2,39 +2,64 @@
 
 import { useEffect, useState } from "react";
 
-type Status = "up" | "down" | "unknown";
+export type Status = "up" | "down" | "unknown";
 
-interface HealthResponse {
+export interface HealthResponse {
   checkedAt: string;
   services: Record<string, { status: Status; latencyMs: number | null }>;
 }
 
-const POLL_INTERVAL_MS = 30_000;
+const INTERVAL_SECONDS = 30;
 
 export function useHealth() {
   const [health, setHealth] = useState<HealthResponse | null>(null);
+  const [isRefreshing, setIsRefreshing] = useState(false);
+  const [countdown, setCountdown] = useState(INTERVAL_SECONDS);
 
   useEffect(() => {
     let cancelled = false;
 
-    async function fetchHealth() {
+    async function fetchApi() {
       try {
         const res = await fetch("/api/health", { cache: "no-store" });
         if (!res.ok) return;
         const data: HealthResponse = await res.json();
-        if (!cancelled) setHealth(data);
+        if (!cancelled) {
+          setHealth(data);
+        }
       } catch {
-        // keep last known status on transient failure
+        // keep last known state
       }
     }
 
-    fetchHealth();
-    const id = setInterval(fetchHealth, POLL_INTERVAL_MS);
+    // Initial fetch
+    fetchApi();
+
+    // 30s background poll
+    const pollId = setInterval(async () => {
+      setIsRefreshing(true);
+      await fetchApi();
+      if (!cancelled) {
+        setIsRefreshing(false);
+        setCountdown(INTERVAL_SECONDS);
+      }
+    }, INTERVAL_SECONDS * 1000);
+
+    // 1s countdown ticker
+    const tickerId = setInterval(() => {
+      setCountdown((prev) => (prev <= 1 ? INTERVAL_SECONDS : prev - 1));
+    }, 1000);
+
     return () => {
       cancelled = true;
-      clearInterval(id);
+      clearInterval(pollId);
+      clearInterval(tickerId);
     };
   }, []);
 
-  return health;
+  return {
+    health,
+    isRefreshing,
+    countdown,
+  };
 }

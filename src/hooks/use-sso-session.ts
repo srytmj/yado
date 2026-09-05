@@ -1,0 +1,87 @@
+"use client";
+
+import { useSyncExternalStore, useCallback } from "react";
+import { buildSsoLoginUrl } from "@/lib/services";
+
+export interface UserSession {
+  name: string;
+  username: string;
+  email: string;
+  role: string;
+}
+
+const STORAGE_KEY = "whitearchive_sso_session";
+
+function subscribe(callback: () => void) {
+  window.addEventListener("storage", callback);
+  window.addEventListener("whitearchive-session-change", callback);
+  return () => {
+    window.removeEventListener("storage", callback);
+    window.removeEventListener("whitearchive-session-change", callback);
+  };
+}
+
+function getSnapshot(): string | null {
+  try {
+    return localStorage.getItem(STORAGE_KEY);
+  } catch {
+    return null;
+  }
+}
+
+function getServerSnapshot(): string | null {
+  return null;
+}
+
+export function useSsoSession() {
+  const sessionRaw = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
+
+  let session: UserSession | null = null;
+  if (sessionRaw) {
+    try {
+      session = JSON.parse(sessionRaw);
+    } catch {
+      session = null;
+    }
+  }
+
+  const notifyChange = () => {
+    window.dispatchEvent(new Event("whitearchive-session-change"));
+  };
+
+  const login = useCallback(() => {
+    window.location.href = buildSsoLoginUrl();
+  }, []);
+
+  const logout = useCallback(() => {
+    try {
+      localStorage.removeItem(STORAGE_KEY);
+      notifyChange();
+    } catch {
+      // ignore
+    }
+  }, []);
+
+  const setDemoSession = useCallback((enabled: boolean) => {
+    if (enabled) {
+      const demoUser: UserSession = {
+        name: "Suryatmaja",
+        username: "srytmj",
+        email: "admin@suryatmaja.dev",
+        role: "Owner & Sysadmin",
+      };
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(demoUser));
+      notifyChange();
+    } else {
+      localStorage.removeItem(STORAGE_KEY);
+      notifyChange();
+    }
+  }, []);
+
+  return {
+    session,
+    login,
+    logout,
+    setDemoSession,
+  };
+}

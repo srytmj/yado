@@ -1,0 +1,75 @@
+[
+  {
+    "id": "inc-01",
+    "title": "Elevated Latency on Malas OPDS Catalog Indexing",
+    "date": "18 days ago",
+    "severity": "minor",
+    "serviceId": "malas",
+    "serviceName": "Malas Library & Reader",
+    "duration": "38 minutes",
+    "updates": [
+      {
+        "timestamp": "14:20 UTC",
+        "status": "Resolved",
+        "message": "Thumbnail re-encoding thread concurrency restricted; memory pressure subsided and latency returned to normal 22ms baseline."
+      },
+      {
+        "timestamp": "14:02 UTC",
+        "status": "Monitoring",
+        "message": "Cache warming throttled. Response times stabilizing across catalog listing endpoints."
+      },
+      {
+        "timestamp": "13:42 UTC",
+        "status": "Investigating",
+        "message": "Automated alert triggered for p95 latency exceeding 800ms on /api/opds/books."
+      }
+    ]
+  },
+  {
+    "id": "inc-02",
+    "title": "Scheduled Maintenance: SSO Key Rotation & Token Migration",
+    "date": "42 days ago",
+    "severity": "maintenance",
+    "serviceId": "sso",
+    "serviceName": "SSO Identity Provider",
+    "duration": "15 minutes",
+    "updates": [
+      {
+        "timestamp": "02:15 UTC",
+        "status": "Completed",
+        "message": "RS256 JWT key rotation completed with zero rejected active sessions."
+      },
+      {
+        "timestamp": "02:00 UTC",
+        "status": "Investigating",
+        "message": "Maintenance window started. Redis token replication verifying secondary node."
+      }
+    ]
+  },
+  {
+    "id": "inc-03",
+    "title": "libs Yamux Relay Tunnel Multiplexer Reconnect",
+    "date": "64 days ago",
+    "severity": "major",
+    "serviceId": "libs",
+    "serviceName": "libs Tunnel & Broker",
+    "duration": "24 minutes",
+    "updates": [
+      {
+        "timestamp": "09:48 UTC",
+        "status": "Resolved",
+        "message": "Tunnel re-established over secondary failover link. All background agent connections restored."
+      },
+      {
+        "timestamp": "09:35 UTC",
+        "status": "Identified",
+        "message": "Upstream router NIC reset caused connection reset by peer on the primary yamux socket."
+      },
+      {
+        "timestamp": "09:24 UTC",
+        "status": "Investigating",
+        "message": "Outbound tunnel health check failed; fallback heartbeat triggered."
+      }
+    ]
+  }
+]

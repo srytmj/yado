@@ -22,8 +22,47 @@
   --font-mono: var(--font-geist-mono);
 }
 
+/* Mode Aplikasi Native: Nonaktifkan seleksi teks dan kursor I-beam blog */
 body {
   background: var(--background);
   color: var(--foreground);
   font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  cursor: default;
+  -webkit-user-drag: none;
+}
+
+/* Elemen interaktif tetap memakai kursor klik */
+button,
+a,
+[role="button"] {
+  cursor: pointer;
+}
+
+/* Hanya izinkan pengetikan teks pada input form */
+input,
+textarea {
+  user-select: text;
+  -webkit-user-select: text;
+  cursor: text;
+}
+
+/* Transisi halus saat pergantian tema sistem */
+body,
+header,
+footer,
+nav,
+section,
+main,
+article,
+aside,
+button,
+input,
+kbd {
+  transition-property: background-color, border-color, color;
+  transition-duration: 0.4s;
+  transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
 }

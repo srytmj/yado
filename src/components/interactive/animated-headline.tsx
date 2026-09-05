@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { animate, split, stagger } from "animejs";
+import { animate, splitText, stagger } from "animejs";
 
 /**
  * Splits its text into characters and reveals them with a staggered
@@ -22,7 +22,7 @@ export function AnimatedHeadline({
     const el = ref.current;
     if (!el) return;
 
-    const splitter = split(el, { chars: true, accessible: true });
+    const splitter = splitText(el, { chars: true, accessible: true });
     const animation = animate(splitter.chars, {
       opacity: { from: 0, to: 1 },
       y: { from: "0.9em", to: "0em" },

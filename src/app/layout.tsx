@@ -4,7 +4,8 @@ import { ReactLenis } from "lenis/react";
 import { BackgroundGlow } from "@/components/background-glow";
 import { CursorSpotlight } from "@/components/interactive/cursor-spotlight";
 import { ThemeProvider } from "@/components/theme-provider";
-import { ThemeToggle } from "@/components/theme-toggle";
+import { Navbar } from "@/components/navbar";
+import { CommandPaletteProvider } from "@/components/interactive/command-palette-provider";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -18,11 +19,11 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "White Archive",
-  description: "One archive, every White Archive microservice behind a single sign-on.",
+  title: "White Archive — Launcher & Mission Control",
+  description: "Unified entry point to microservices, identity, and production web portals behind White Archive.",
 };
 
-export default function RootLayout({ children }: LayoutProps<"/">) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html
       lang="en"
@@ -34,9 +35,8 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           <ReactLenis root>
             <BackgroundGlow />
             <CursorSpotlight />
-            <div className="fixed right-4 top-4 z-50 rounded-full border border-foreground/10 bg-background/70 p-1">
-              <ThemeToggle />
-            </div>
+            <Navbar />
+            <CommandPaletteProvider />
             {children}
           </ReactLenis>
         </ThemeProvider>

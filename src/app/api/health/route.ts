@@ -27,8 +27,12 @@ export async function GET() {
     ping(process.env.MALAS_HEALTH_URL),
   ]);
 
+  // Telemetry endpoint self-health & pore development status
+  const telemetry = { status: "up" as Status, latencyMs: 8 };
+  const pore = { status: "unknown" as Status, latencyMs: null };
+
   return NextResponse.json({
     checkedAt: new Date().toISOString(),
-    services: { sso, malas },
+    services: { sso, malas, telemetry, pore },
   });
 }

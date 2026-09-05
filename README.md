@@ -1,36 +1,144 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# White Archive — Launcher, Telemetry & Mission Control
 
-## Getting Started
+White Archive is the centralized portal, microservice launcher, and observability dashboard for the `*.suryatmaja.dev` homelab network. Built with Next.js 16 (Turbopack), Tailwind CSS, Framer Motion, and Anime.js.
 
-First, run the development server:
+---
+
+## 🤖 If you are an AI Assistant (Claude Code, Gemini CLI, Cursor, Antigravity) — READ THIS
+
+> [!IMPORTANT]
+> When the user asks you to record a downtime, report an incident, log an outage, or schedule maintenance, follow this exact automated protocol.
+
+### 1. Source of Truth
+All incident records and maintenance announcements are stored in:
+```
+src/data/incidents.json
+```
+TypeScript schema definition is in `src/lib/telemetry.ts` (`IncidentRecord`, `IncidentUpdate`).
+
+### 2. Available CLI Commands
+You can run these commands via your bash/terminal execution tool:
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+# List all current incidents
+npm run incident:list
+
+# Create a new incident / outage / maintenance announcement
+npm run incident:create -- --title="<Title>" --service="<sso|malas|libs|pore|gateway>" --severity="<minor|major|maintenance>" --duration="<e.g. 15 minutes>" --message="<Initial log>"
+
+# Add a progress update to an active incident
+npm run incident:update -- --id="<inc-id>" --status="<Investigating|Identified|Monitoring|Resolved|Completed>" --message="<Update details>"
+
+# Resolve an incident
+npm run incident:resolve -- --id="<inc-id>" --duration="<final duration>" --message="<Resolution summary>"
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### 3. Allowed Services & Values
+- **Service IDs:**
+  - `sso`: SSO Identity Provider (`sso.suryatmaja.dev`)
+  - `malas`: Malas Library & Reader (`malas.suryatmaja.dev`)
+  - `libs`: libs Tunnel & Broker (`libs.suryatmaja.dev`)
+  - `pore`: Pore.js Reader Engine (`pore.suryatmaja.dev`)
+  - `gateway`: Edge Gateway & Ingress (`suryatmaja.dev`)
+- **Severities:** `minor`, `major`, `maintenance`
+- **Investigation Statuses:** `Investigating`, `Identified`, `Monitoring`, `Resolved`, `Completed`
+- **Timestamp Standard:** Always use UTC time format `HH:MM UTC` for update logs.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### 4. AI Prompting Examples & Expected Actions
+- **User:** *"malas tadi crash 20 menit gara-gara memory leak, tolong catat insidennya."*
+  &rarr; Execute:
+  `npm run incident:create -- --title="Malas Memory Pressure Spike" --service="malas" --severity="minor" --duration="20 minutes" --message="Cache buffer memory exhaustion mitigated by restarting service."`
+- **User:** *"Besok jam 2 pagi ada maintenance ganti switch homelab 30 menit."*
+  &rarr; Execute:
+  `npm run incident:create -- --title="Scheduled Network Switch Maintenance" --service="gateway" --severity="maintenance" --duration="30 minutes" --message="Upstream 2.5GbE switch firmware update and port re-wiring."`
+- **User:** *"Tolong resolve insiden libs kemarin."*
+  &rarr; Find ID using `npm run incident:list` then execute `npm run incident:resolve -- --id="<id>" --message="Resolved."`
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+---
 
-## Learn More
+## 👤 For Product Owners & Homelab Maintainers
 
-To learn more about Next.js, take a look at the following resources:
+You can manage telemetry, status bars, and maintenance notices through 3 flexible workflows:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### Method A: Natural Language via AI (Fastest)
+Open **Claude Code**, **Gemini CLI**, or **Antigravity** in this repository and simply tell the AI:
+> *"SSO tadi sempat down 10 menit karena update database, tolong catat di telemetry."*
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+The AI will read the protocol above, execute the script, format the logs, and update the status page automatically.
 
-## Deploy on Vercel
+### Method B: Manual CLI / Terminal
+Run the interactive CLI helper:
+```bash
+# View incidents
+npm run incident:list
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+# Create incident
+npm run incident:create -- --title="SSO OAuth Key Rotation" --service=sso --severity=maintenance --message="Rotating RSA keys."
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+# Update an incident
+npm run incident:update -- --id=inc-01 --status=Monitoring --message="Key rotation completed. Verifying session validation."
+
+# Resolve
+npm run incident:resolve -- --id=inc-01 --message="All authentication channels verified."
+```
+
+### Method C: Direct File Edit (VS Code / GitHub Mobile Web)
+Simply edit `src/data/incidents.json` directly. Example structure:
+```json
+[
+  {
+    "id": "inc-04",
+    "title": "Scheduled Proxmox Hypervisor Upgrade",
+    "date": "Today (Sep 5, 2026)",
+    "severity": "maintenance",
+    "serviceId": "gateway",
+    "serviceName": "Edge Gateway & Ingress",
+    "duration": "30 minutes",
+    "updates": [
+      {
+        "timestamp": "16:00 UTC",
+        "status": "Completed",
+        "message": "Node rebooted into Linux Kernel 6.8 with zero packet loss."
+      }
+    ]
+  }
+]
+```
+
+### Method D: Automated Homelab Monitoring via Uptime Kuma
+If you run **Uptime Kuma** or Prometheus in your homelab:
+1. In Uptime Kuma: Navigate to **Settings &rarr; Notifications &rarr; Webhook**.
+2. Set webhook target to: `https://whitearchive.suryatmaja.dev/api/telemetry/webhook`.
+3. Set alert on service down/up. Uptime Kuma will automatically notify and register status updates in real-time without manual intervention.
+
+---
+
+## 🛠️ Tech Stack & Features
+
+- **Framework:** Next.js 16 (Turbopack, App Router, React 19)
+- **Styling:** Vanilla Tailwind CSS with dynamic OS theme auto-adapt
+- **Animations:** Framer Motion staggered entrance (`[0.16, 1, 0.3, 1]`) + Anime.js text reveal
+- **Smooth Scrolling:** Lenis smooth scrolling with anchor offsets
+- **Telemetry:** 90-day interactive daily bar graphs (`/status`), heartbeat polling (30s), live response probes
+- **Identity:** Single Sign-On (SSO) OAuth2 session widget with Guest and Authenticated states
+- **Command Palette:** Keyboard-driven navigation (`Ctrl + K` or `/`)
+
+---
+
+## 🚀 Getting Started
+
+```bash
+# Install dependencies
+npm install
+
+# Start local development server
+npm run dev
+
+# Run linter
+npm run lint
+
+# Compile production build
+npm run build
+```
+
+Open [http://localhost:3000](http://localhost:3000) for the Launcher, or [http://localhost:3000/status](http://localhost:3000/status) for the 90-Day Telemetry Portal.

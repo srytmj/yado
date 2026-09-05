@@ -6,7 +6,12 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "incident": "node scripts/incident-cli.mjs",
+    "incident:list": "node scripts/incident-cli.mjs list",
+    "incident:create": "node scripts/incident-cli.mjs create",
+    "incident:update": "node scripts/incident-cli.mjs update",
+    "incident:resolve": "node scripts/incident-cli.mjs resolve"
   },
   "dependencies": {
     "animejs": "^4.5.0",
