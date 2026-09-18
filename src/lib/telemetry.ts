@@ -42,12 +42,14 @@ export interface IncidentRecord {
 const SERVICE_META: Record<string, { name: string; category: string; host: string }> = {
   sso: { name: "SSO Identity Provider", category: "Authentication", host: "sso.yado.my.id" },
   malas: { name: "Malas Library & Reader", category: "Content Portal", host: "malas.yado.my.id" },
-  libs: { name: "libs Tunnel & Broker", category: "Core Gateway", host: "libs.yado.my.id" },
   pore: { name: "Pore.js Reader Engine", category: "Edge Application", host: "pore.yado.my.id" },
   gateway: { name: "Edge Gateway & Ingress", category: "Infrastructure", host: "yado.my.id" },
 };
 
-const SERVICE_ORDER = ["sso", "malas", "libs", "pore", "gateway"];
+// libs has no deployed service yet, so it is intentionally left out of the
+// tracked telemetry grid until it actually exists - showing a fabricated
+// uptime history for something unbuilt would be worse than omitting it.
+const SERVICE_ORDER = ["sso", "malas", "pore", "gateway"];
 
 // incidents.json stores dates as "Today (...)" or "N days ago" (see
 // scripts/incident-cli.mjs) - convert that to an offset on the rolling
