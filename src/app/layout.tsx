@@ -19,8 +19,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "White Archive — Launcher & Mission Control",
-  description: "Unified entry point to microservices, identity, and production web portals behind White Archive.",
+  title: "Yado - Launcher & Mission Control",
+  description: "Unified entry point to microservices, identity, and production web portals behind Yado.",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

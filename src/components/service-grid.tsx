@@ -77,7 +77,7 @@ export function ServiceGrid() {
             Services & Portals
           </h2>
           <p className="mt-1 text-sm text-foreground/50">
-            Active web portals and microservices running on the White Archive network.
+            Active web portals and microservices running on the Yado network.
           </p>
         </div>
 

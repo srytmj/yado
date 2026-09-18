@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 /**
- * White Archive Incident & Maintenance CLI Tool
+ * Yado Incident & Maintenance CLI Tool
  * Usable by humans and AI coding assistants (Claude Code, Gemini CLI, Antigravity).
  *
  * Usage:
@@ -82,7 +82,7 @@ function getTodayString() {
 
 function handleList() {
   const incidents = readIncidents();
-  console.log(`\n=== White Archive Incidents & Maintenance (${incidents.length} total) ===\n`);
+  console.log(`\n=== Yado Incidents & Maintenance (${incidents.length} total) ===\n`);
   if (!incidents.length) {
     console.log("No incidents found in registry.");
     return;
@@ -229,7 +229,7 @@ switch (command) {
     break;
   default:
     console.log(`
-White Archive Incident & Maintenance CLI
+Yado Incident & Maintenance CLI
 
 Available commands:
   list                      List all past and active incidents

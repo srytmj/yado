@@ -1,10 +1,12 @@
-# White Archive — Launcher, Telemetry & Mission Control
+# Yado - Launcher, Telemetry & Mission Control
 
-White Archive is the centralized portal, microservice launcher, and observability dashboard for the `*.suryatmaja.dev` homelab network. Built with Next.js 16 (Turbopack), Tailwind CSS, Framer Motion, and Anime.js.
+Yado (宿) - artinya "penginapan/tempat singgah", tempat yang memberikan kesan "rumah buat koleksimu".
+
+Yado is the centralized portal, microservice launcher, and observability dashboard for the `*.yado.my.id` homelab network. Built with Next.js 16 (Turbopack), Tailwind CSS, Framer Motion, and Anime.js.
 
 ---
 
-## 🤖 If you are an AI Assistant (Claude Code, Gemini CLI, Cursor, Antigravity) — READ THIS
+## 🤖 If you are an AI Assistant (Claude Code, Gemini CLI, Cursor, Antigravity) - READ THIS
 
 > [!IMPORTANT]
 > When the user asks you to record a downtime, report an incident, log an outage, or schedule maintenance, follow this exact automated protocol.
@@ -35,11 +37,11 @@ npm run incident:resolve -- --id="<inc-id>" --duration="<final duration>" --mess
 
 ### 3. Allowed Services & Values
 - **Service IDs:**
-  - `sso`: SSO Identity Provider (`sso.suryatmaja.dev`)
-  - `malas`: Malas Library & Reader (`malas.suryatmaja.dev`)
-  - `libs`: libs Tunnel & Broker (`libs.suryatmaja.dev`)
-  - `pore`: Pore.js Reader Engine (`pore.suryatmaja.dev`)
-  - `gateway`: Edge Gateway & Ingress (`suryatmaja.dev`)
+  - `sso`: SSO Identity Provider (`sso.yado.my.id`)
+  - `malas`: Malas Library & Reader (`malas.yado.my.id`)
+  - `libs`: libs Tunnel & Broker (`libs.yado.my.id`)
+  - `pore`: Pore.js Reader Engine (`pore.yado.my.id`)
+  - `gateway`: Edge Gateway & Ingress (`yado.my.id`)
 - **Severities:** `minor`, `major`, `maintenance`
 - **Investigation Statuses:** `Investigating`, `Identified`, `Monitoring`, `Resolved`, `Completed`
 - **Timestamp Standard:** Always use UTC time format `HH:MM UTC` for update logs.
@@ -108,7 +110,7 @@ Simply edit `src/data/incidents.json` directly. Example structure:
 ### Method D: Automated Homelab Monitoring via Uptime Kuma
 If you run **Uptime Kuma** or Prometheus in your homelab:
 1. In Uptime Kuma: Navigate to **Settings &rarr; Notifications &rarr; Webhook**.
-2. Set webhook target to: `https://whitearchive.suryatmaja.dev/api/telemetry/webhook`.
+2. Set webhook target to: `https://yado.yado.my.id/api/telemetry/webhook`.
 3. Set alert on service down/up. Uptime Kuma will automatically notify and register status updates in real-time without manual intervention.
 
 ---

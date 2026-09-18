@@ -74,7 +74,7 @@ export default function StatusPage() {
               System Telemetry & Health
             </h1>
             <p className="mt-2 text-sm text-foreground/60 leading-relaxed">
-              Real-time availability, 90-day operational history, latency metrics, and incident post-mortems across all White Archive services.
+              Real-time availability, 90-day operational history, latency metrics, and incident post-mortems across all Yado services.
             </p>
           </div>
 
@@ -286,7 +286,7 @@ export default function StatusPage() {
         variants={item}
         className="mt-16 pt-8 border-t border-foreground/10 flex items-center justify-between text-xs text-foreground/40 font-mono"
       >
-        <span>White Archive Telemetry &copy; {new Date().getFullYear()}</span>
+        <span>Yado Telemetry &copy; {new Date().getFullYear()}</span>
         <Link href="/" className="hover:text-foreground transition-colors">
           Return to Launcher
         </Link>

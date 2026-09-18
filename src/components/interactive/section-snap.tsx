@@ -6,7 +6,7 @@ import Snap from "lenis/snap";
 
 /**
  * Gently eases the page to rest on the nearest `.scroll-panel` section once
- * the user stops scrolling — powered by Lenis's own JS-driven snap (not
+ * the user stops scrolling - powered by Lenis's own JS-driven snap (not
  * native CSS `scroll-snap-type: mandatory`, which fights every wheel tick
  * and was the main source of scroll jank).
  */

@@ -1,6 +1,6 @@
-# Standar Desain, Animasi, dan Konsistensi White Archive
+# Standar Desain, Animasi, dan Konsistensi Yado
 
-Dokumen aturan ini wajib dipatuhi oleh setiap pengembang dan AI agent dalam membuat atau memodifikasi komponen dan halaman di proyek White Archive.
+Dokumen aturan ini wajib dipatuhi oleh setiap pengembang dan AI agent dalam membuat atau memodifikasi komponen dan halaman di proyek Yado.
 
 ---
 

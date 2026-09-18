@@ -1,4 +1,4 @@
-# Changelog - White Archive
+# Changelog - Yado
 
 Catatan riwayat perubahan kode, arsitektur, penambahan komponen, dan prosedur rollback.
 
@@ -12,6 +12,14 @@ git restore .
 ```
 
 ## Riwayat Perubahan
+
+### v0.3.0 - 2026-09-18
+
+Ganti nama proyek dan pembaruan domain:
+- Mengubah nama proyek secara keseluruhan dari "White Archive" menjadi "Yado" (terinspirasi dari karakter Kanji 宿, yang berarti penginapan/tempat singgah; memberikan kesan "rumah buat koleksimu").
+- Mengubah seluruh referensi domain dari `*.suryatmaja.dev` menjadi `*.yado.my.id`.
+- Pembaruan nama proyek, domain, dan referensi file pada semua file yang terkait di dalam repositori `yado`.
+- Perubahan selaras juga diterapkan pada repositori turunan `sso.yado`.
 
 ### v0.2.16 - 2026-09-05
 
@@ -27,7 +35,7 @@ Pemisahan Data Insiden, CLI Helper, dan Dokumentasi Dual-Mode (AI + Human):
 - `AGENTS.md`:
   - Menambahkan Aturan 6: Protokol Standar AI Agent untuk logging insiden, konversi waktu UTC, format ID, dan validasi build.
 - `README.md`:
-  - Menambahkan panduan komprehensif dengan trigger khusus: `## 🤖 If you are an AI Assistant (Claude Code, Gemini CLI, Cursor, Antigravity) — READ THIS` serta panduan praktis untuk Product Owner homelab (via AI, via CLI, via JSON langsung, dan webhook otomatis Uptime Kuma).
+  - Menambahkan panduan komprehensif dengan trigger khusus: `## 🤖 If you are an AI Assistant (Claude Code, Gemini CLI, Cursor, Antigravity) - READ THIS` serta panduan praktis untuk Product Owner homelab (via AI, via CLI, via JSON langsung, dan webhook otomatis Uptime Kuma).
 - `src/app/docs/page.tsx`:
   - Menambahkan Seksi 4: "Telemetry & Incident Reporting (AI & Homelab Workflows)" pada halaman dokumentasi web resmi (`/docs`) lengkap dengan box contoh prompt AI conversational, perintah terminal CLI, dan panduan GitOps JSON.
 
@@ -61,7 +69,7 @@ Penghapusan efek getar tombol hero & Penyeragaman bahasa 100% Inggris:
   - `src/components/sso-profile-widget.tsx`: Menyeragamkan menu akun, tag status, dan tombol aksi masuk/keluar.
   - `src/components/status-dashboard.tsx`: Menyeragamkan label telemetri ("System Telemetry & Health", "System Status", "All systems operational", "Partial system outage", "Updated:", "Updating...").
   - `src/components/footer.tsx`: Menyeragamkan catatan hak cipta dan status SSO ("All services SSO-enabled.").
-  - `src/app/docs/page.tsx`: Menerjemahkan seluruh isi dokumentasi arsitektur White Archive ke bahasa Inggris teknis yang lugas dan bersih.
+  - `src/app/docs/page.tsx`: Menerjemahkan seluruh isi dokumentasi arsitektur Yado ke bahasa Inggris teknis yang lugas dan bersih.
 
 ### v0.2.13 - 2026-09-05
 
@@ -129,7 +137,7 @@ Otomatisasi tema mengikuti sistem dan animasi transisi halus:
 
 ### v0.2.5 - 2026-09-05
 
-- `src/components/navbar.tsx`: Menambahkan interaksi klik pada logo/teks "White Archive". Jika sedang berada di beranda, klik logo akan menggulir halaman langsung ke posisi paling atas (*smooth scroll to top*) menggunakan engine Lenis.
+- `src/components/navbar.tsx`: Menambahkan interaksi klik pada logo/teks "Yado". Jika sedang berada di beranda, klik logo akan menggulir halaman langsung ke posisi paling atas (*smooth scroll to top*) menggunakan engine Lenis.
 
 ### v0.2.4 - 2026-09-05
 
@@ -138,7 +146,7 @@ Penambahan halaman dokumentasi internal dan perbaikan navigasi scroll:
   - Mengintegrasikan hook `useLenis` untuk navigasi anchor `#services` dan `#status`. Perpindahan ke seksi target kini berjalan dengan animasi *smooth scroll* tanpa sentakan (tanpa blink atau reload).
   - Mengubah tautan "Dokumentasi" agar mengarah ke rute internal `/docs` menggunakan `next/link`.
 - `src/app/docs/page.tsx`:
-  - Membuat halaman dokumentasi arsitektur internal White Archive (peta ekosistem homelab, spesifikasi platform `libs` (Go) dan reader engine `Pore.js` (TypeScript), serta alur autentikasi OAuth2 SSO).
+  - Membuat halaman dokumentasi arsitektur internal Yado (peta ekosistem homelab, spesifikasi platform `libs` (Go) dan reader engine `Pore.js` (TypeScript), serta alur autentikasi OAuth2 SSO).
 
 ### v0.2.2 - 2026-09-05
 

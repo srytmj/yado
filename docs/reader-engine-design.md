@@ -1,9 +1,9 @@
-# Pore.js — Reader Engine Design Doc
+# Pore.js - Reader Engine Design Doc
 
 > Status: **Draft / RFC** · Owner: Surya · Last updated: 2026-08-28
 >
-> **Pore.js** — the reading engine ("pore over a book"). Separate repo
-> (`github.com/srytmj/pore.js`). Public demo at `pore.suryatmaja.dev`.
+> **Pore.js** - the reading engine ("pore over a book"). Separate repo
+> (`github.com/srytmj/pore.js`). Public demo at `pore.yado.my.id`.
 >
 > This is **Project B** of two. Project A is **[libs](library-platform-design.md)**,
 > the library / connection platform; its `/api/v1` is one of the sources this
@@ -19,13 +19,13 @@ CBZ). Built from scratch rather than wrapping an existing library, because:
 - No JS reader library cleanly covers *both* image manga (RTL, webtoon,
   double-page spread) *and* reflowable text with the UX and theming control we
   want, in one coherent shell.
-- The rendering + pagination engine is the point — it is the frontend
+- The rendering + pagination engine is the point - it is the frontend
   engineering showcase.
 - As its own repo it is independently useful and demoable (bundled public-domain
   fixtures, no backend required), which makes it a stronger portfolio piece than
   a component buried in a platform.
 
-**PDF is the one exception**: nobody reimplements a PDF renderer — we wrap
+**PDF is the one exception**: nobody reimplements a PDF renderer - we wrap
 **pdf.js**. That is standard practice, not a shortcut.
 
 ### What "build our own" actually means
@@ -51,7 +51,7 @@ CBZ). Built from scratch rather than wrapping an existing library, because:
 4. Position tracking that round-trips across devices and viewport sizes.
 5. Offline: render entirely client-side from a cached blob.
 6. Runs standalone with zero backend via bundled fixtures.
-7. Framework-agnostic core; thin React bindings for the White Archive app.
+7. Framework-agnostic core; thin React bindings for the Yado app.
 8. Accessible: keyboard-complete, screen-reader linear mode for text.
 
 ### Non-goals (v1)
@@ -59,9 +59,9 @@ CBZ). Built from scratch rather than wrapping an existing library, because:
 - Authoring / editing books.
 - Annotations beyond bookmarks (highlights/notes are M4+).
 - DRM of any kind.
-- Audiobooks / TTS (TTS is a stretch goal — the text engine leaves room for it).
+- Audiobooks / TTS (TTS is a stretch goal - the text engine leaves room for it).
 - Native apps. PWA only.
-- Being a general document viewer (Office formats, CBR/RAR — RAR is patent-ugly).
+- Being a general document viewer (Office formats, CBR/RAR - RAR is patent-ugly).
 
 ---
 
@@ -93,7 +93,7 @@ pore.js/
 
 ---
 
-## 4. Source interface — the seam
+## 4. Source interface - the seam
 
 ```ts
 interface ReaderSource {
@@ -121,7 +121,7 @@ Built-in implementations shipped in `reader-core`:
 
 | Source | Use |
 |---|---|
-| `WhiteArchiveSource(baseUrl, auth)` | Talks to Platform §10 API. The real one. |
+| `YadoSource(baseUrl, auth)` | Talks to Platform §10 API. The real one. |
 | `LocalFileSource(File)` | User drops an `.epub` / `.cbz` / `.pdf` / folder of images. |
 | `DemoSource()` | Serves the bundled `fixtures/`. Powers the public demo + tests. |
 | `OpdsSource(url)` (later) | Read-only, for any OPDS server directly. |
@@ -151,7 +151,7 @@ type Position =
   progress bars and a "good enough" restore when the exact block moved.
 - Resolve order on open: exact anchor → nearest block → `percent` of spine →
   `percent` of book.
-- **CFI is a stretch goal** (`type: "cfi"`) once the engine is stable — it makes
+- **CFI is a stretch goal** (`type: "cfi"`) once the engine is stable - it makes
   positions portable to other readers and is a nice spec-compliance flex.
 
 ### Manga / PDF
@@ -171,8 +171,8 @@ survives image-height changes.
 
 | Mode | Notes |
 |---|---|
-| **Paged — single** | One page fills the viewport per fit mode. |
-| **Paged — double spread** | Two pages side by side. Detect wide pages (aspect > 1) and show them solo, centered. Configurable cover-alone offset. |
+| **Paged - single** | One page fills the viewport per fit mode. |
+| **Paged - double spread** | Two pages side by side. Detect wide pages (aspect > 1) and show them solo, centered. Configurable cover-alone offset. |
 | **Continuous vertical (webtoon)** | Virtualized list; images stream in; gap configurable (0 for true webtoon). |
 | **Continuous horizontal** | Same, horizontal; respects RTL. |
 
@@ -212,7 +212,7 @@ pairing, and swipe gesture mapping. Taken from the manifest, user-overridable.
 
 ---
 
-## 7. Text engine (EPUB) — the hard part
+## 7. Text engine (EPUB) - the hard part
 
 ### Parsing
 
@@ -248,7 +248,7 @@ The proven approach (epub.js / foliate-js lineage), reimplemented:
 - **Prev/next across spine boundaries**: turning past the last column of spine `i`
   loads spine `i+1` at column 0 (and preloads `i+1` while reading the tail of `i`).
 
-### Theming — override without breaking
+### Theming - override without breaking
 
 - User controls: font family (bundled + embedded), size, line-height, text-align
   (justify toggle), margins, column count (1 or 2), theme (light / sepia / dark /
@@ -257,7 +257,7 @@ The proven approach (epub.js / foliate-js lineage), reimplemented:
   common selectors (`body, p, div, li, ...`) at low specificity; let deliberate
   author styling (drop caps, poem indentation) survive. Provide a "publisher
   styles off" switch that raises the gloves for stubborn books.
-- Dark theme: don't just invert — set `color` / `background`, and use
+- Dark theme: don't just invert - set `color` / `background`, and use
   `filter: invert() hue-rotate()` *only* on images the user opts to dim.
 
 ### Writing modes
@@ -274,7 +274,7 @@ The proven approach (epub.js / foliate-js lineage), reimplemented:
   the ordinal of its nearest block ancestor among siblings, and the character
   offset. That is the `anchor`.
 - Resolve = reverse walk with the fallbacks in §5.
-- Keep the DOM-walk utilities isolated and unit-tested — this is the bug-prone
+- Keep the DOM-walk utilities isolated and unit-tested - this is the bug-prone
   core.
 
 ### Search, selection, footnotes
@@ -357,7 +357,7 @@ The proven approach (epub.js / foliate-js lineage), reimplemented:
   rendering, React owns the chrome.
 - Hooks: `useReaderLocation()`, `useReaderSettings()`, `useTableOfContents()`,
   `useReaderSearch()`.
-- No React inside the iframes — ever.
+- No React inside the iframes - ever.
 
 ---
 
@@ -377,12 +377,12 @@ The proven approach (epub.js / foliate-js lineage), reimplemented:
 
 ## 13. Prior art to study (not depend on)
 
-- **foliate-js** — the modern reference for EPUB pagination without epub.js's
+- **foliate-js** - the modern reference for EPUB pagination without epub.js's
   baggage. Read its paginator.
-- **epub.js** — older, widely used; good for understanding CFI.
-- **pdf.js** — we depend on this one.
-- **Komga / Kavita webtoon readers** — image reader UX reference.
-- **Readium** (web) — spec-heavy, good for the Locator model vocabulary.
+- **epub.js** - older, widely used; good for understanding CFI.
+- **pdf.js** - we depend on this one.
+- **Komga / Kavita webtoon readers** - image reader UX reference.
+- **Readium** (web) - spec-heavy, good for the Locator model vocabulary.
 
 ---
 
@@ -391,20 +391,20 @@ The proven approach (epub.js / foliate-js lineage), reimplemented:
 **Cut for v1**: CFI (anchor only), highlights/notes, TTS, fixed-layout EPUB,
 OPDS source, in-book search (M3), vertical-JP (M3).
 
-- **M0 — Image engine + DemoSource.** Paged single/double + webtoon, fit modes,
+- **M0 - Image engine + DemoSource.** Paged single/double + webtoon, fit modes,
   LTR/RTL, zoom/pan, preload ring, gestures/keys. Runs on bundled CBZ + image
   fixtures. **No backend.**
-- **M1 — Text engine (EPUB reflowable).** Parse, sandboxed iframe + multicol
+- **M1 - Text engine (EPUB reflowable).** Parse, sandboxed iframe + multicol
   pagination, spine-boundary turns, `anchor` generation + restore, typography +
   theme controls, TOC. Runs on Gutenberg fixtures.
-- **M2 — PDF + shared shell.** pdf.js wrap reusing the image shell; unified
+- **M2 - PDF + shared shell.** pdf.js wrap reusing the image shell; unified
   `Locator`, chrome, progress reporting; `LocalFileSource` (drag-drop any file).
-- **M3 — Integration + polish.** `WhiteArchiveSource` against Platform §10;
+- **M3 - Integration + polish.** `YadoSource` against Platform §10;
   React bindings; offline (`CachedSource` + IndexedDB); in-book search;
   vertical-JP; a11y flow mode.
-- **M4+** — CFI, highlights/notes, TTS, fixed-layout, OPDS source.
+- **M4+** - CFI, highlights/notes, TTS, fixed-layout, OPDS source.
 
-The demo app is deployable and useful from **M0** — that is the portfolio artifact
+The demo app is deployable and useful from **M0** - that is the portfolio artifact
 even before the platform exists.
 
 ---
@@ -412,13 +412,13 @@ even before the platform exists.
 ## 15. Relationship to libs (Project A)
 
 ```
-Pore.js ── ReaderSource ──┬── WhiteArchiveSource ──► libs.suryatmaja.dev /api/v1  (Project A)
+Pore.js ── ReaderSource ──┬── YadoSource ──► libs.yado.my.id /api/v1  (Project A)
                           ├── LocalFileSource      ──► a File the user dropped
                           └── DemoSource           ──► bundled fixtures
 ```
 
-- The engine has **no knowledge** of agents, relays, tunnels, or SSO — that is
+- The engine has **no knowledge** of agents, relays, tunnels, or SSO - that is
   entirely libs's concern, hidden behind the source.
 - The two repos share only: the `Position` JSON shape (§5), and the shape of
-  libs's §10 responses (which `WhiteArchiveSource` adapts to `Manifest`).
+  libs's §10 responses (which `YadoSource` adapts to `Manifest`).
 - Either project can be built, demoed, and shown off without the other.

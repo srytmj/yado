@@ -215,7 +215,7 @@ export function CommandPalette({ isOpen, onClose }: CommandPaletteProps) {
               </div>
               <div className="flex items-center gap-1">
                 <Command className="h-3 w-3" />
-                <span>White Archive</span>
+                <span>Yado</span>
               </div>
             </div>
           </motion.div>

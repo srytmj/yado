@@ -90,7 +90,7 @@ export function SsoProfileWidget() {
             {/* Menu Actions */}
             <div className="py-1 text-xs">
               <a
-                href="https://sso.suryatmaja.dev"
+                href="https://sso.yado.my.id"
                 target="_blank"
                 rel="noopener noreferrer"
                 onClick={() => setIsOpen(false)}

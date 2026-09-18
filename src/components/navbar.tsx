@@ -64,7 +64,7 @@ export function Navbar() {
             <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-foreground text-background">
               <Layers className="h-4 w-4" />
             </div>
-            <span className="text-sm font-semibold tracking-tight">White Archive</span>
+            <span className="text-sm font-semibold tracking-tight">Yado</span>
             <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" title="Hub Operational" />
           </Link>
 

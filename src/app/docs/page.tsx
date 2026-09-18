@@ -53,11 +53,11 @@ export default function DocsPage() {
           <span>Official Documentation</span>
         </div>
         <h1 className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
-          White Archive Ecosystem Architecture
+          Yado Ecosystem Architecture
         </h1>
         <p className="mt-3 text-base text-foreground/60 leading-relaxed">
-          White Archive is an interconnected ecosystem of self-hosted microservices deployed under the{" "}
-          <code className="rounded bg-foreground/10 px-1.5 py-0.5 font-mono text-xs text-foreground">*.suryatmaja.dev</code>{" "}
+          Yado is an interconnected ecosystem of self-hosted microservices deployed under the{" "}
+          <code className="rounded bg-foreground/10 px-1.5 py-0.5 font-mono text-xs text-foreground">*.yado.my.id</code>{" "}
           domain on private homelab infrastructure with centralized identity and access control.
         </p>
       </motion.header>
@@ -93,7 +93,7 @@ export default function DocsPage() {
                   </td>
                   <td className="p-4">
                     <a
-                      href="https://github.com/srytmj/sso.whitearchive"
+                      href="https://github.com/srytmj/sso.yado"
                       target="_blank"
                       rel="noopener noreferrer"
                       className="inline-flex items-center gap-1 font-mono text-foreground/50 hover:text-foreground"
@@ -188,7 +188,7 @@ export default function DocsPage() {
               <ul className="space-y-1.5 text-xs text-foreground/60 list-disc list-inside">
                 <li>Image rendering engine for comics and manga</li>
                 <li>Text pagination engine for EPUB and PDF</li>
-                <li>Source-agnostic adapters (White Archive, LocalFile, and Demo)</li>
+                <li>Source-agnostic adapters (Yado, LocalFile, and Demo)</li>
                 <li>Operates standalone in browser without strict backend dependency</li>
               </ul>
             </div>
@@ -202,10 +202,10 @@ export default function DocsPage() {
           </h2>
           <div className="rounded-2xl border border-foreground/10 bg-foreground/[0.02] p-6 space-y-4">
             <p className="text-foreground/70 leading-relaxed">
-              All White Archive web services implement standard OAuth2 authentication flows. Each client application registers its <code className="font-mono text-xs bg-foreground/10 px-1 py-0.5 rounded">client_id</code> and <code className="font-mono text-xs bg-foreground/10 px-1 py-0.5 rounded">redirect_uri</code> with the centralized SSO provider.
+              All Yado web services implement standard OAuth2 authentication flows. Each client application registers its <code className="font-mono text-xs bg-foreground/10 px-1 py-0.5 rounded">client_id</code> and <code className="font-mono text-xs bg-foreground/10 px-1 py-0.5 rounded">redirect_uri</code> with the centralized SSO provider.
             </p>
             <div className="rounded-xl bg-foreground/5 p-4 font-mono text-xs text-foreground/70 overflow-x-auto">
-              GET https://sso.suryatmaja.dev/oauth/authorize?client_id=whitearchive-landing&amp;response_type=code
+              GET https://sso.yado.my.id/oauth/authorize?client_id=yado-landing&amp;response_type=code
             </div>
             <p className="text-xs text-foreground/50">
               Upon successful verification on the SSO portal, session credentials grant immediate access across target microservices without repeated logins.
@@ -305,7 +305,7 @@ export default function DocsPage() {
 
       {/* Footer Nav */}
       <motion.div variants={item} className="mt-16 pt-8 border-t border-foreground/10 flex items-center justify-between text-xs text-foreground/40">
-        <span>White Archive &copy; {new Date().getFullYear()}</span>
+        <span>Yado &copy; {new Date().getFullYear()}</span>
         <Link href="/" className="hover:text-foreground transition-colors">
           Back to Launcher
         </Link>

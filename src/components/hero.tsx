@@ -52,7 +52,7 @@ export function Hero() {
         variants={item}
         className="mt-8 max-w-2xl text-balance text-base text-foreground/60 sm:text-lg leading-relaxed"
       >
-        Primary entry point to web applications, internal microservices, and active projects across the White Archive network.
+        Primary entry point to web applications, internal microservices, and active projects across the Yado network.
       </motion.p>
 
       {/* Quick Interactive Search */}

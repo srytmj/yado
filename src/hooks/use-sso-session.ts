@@ -10,14 +10,14 @@ export interface UserSession {
   role: string;
 }
 
-const STORAGE_KEY = "whitearchive_sso_session";
+const STORAGE_KEY = "yado_sso_session";
 
 function subscribe(callback: () => void) {
   window.addEventListener("storage", callback);
-  window.addEventListener("whitearchive-session-change", callback);
+  window.addEventListener("yado-session-change", callback);
   return () => {
     window.removeEventListener("storage", callback);
-    window.removeEventListener("whitearchive-session-change", callback);
+    window.removeEventListener("yado-session-change", callback);
   };
 }
 
@@ -46,7 +46,7 @@ export function useSsoSession() {
   }
 
   const notifyChange = () => {
-    window.dispatchEvent(new Event("whitearchive-session-change"));
+    window.dispatchEvent(new Event("yado-session-change"));
   };
 
   const login = useCallback(() => {
@@ -67,7 +67,7 @@ export function useSsoSession() {
       const demoUser: UserSession = {
         name: "Suryatmaja",
         username: "srytmj",
-        email: "admin@suryatmaja.dev",
+        email: "admin@yado.my.id",
         role: "Owner & Sysadmin",
       };
       localStorage.setItem(STORAGE_KEY, JSON.stringify(demoUser));

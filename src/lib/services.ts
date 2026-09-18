@@ -35,9 +35,9 @@ export const services: ServiceDef[] = [
     name: "SSO",
     tagline: "Identity & Access",
     description:
-      "Centralized OAuth2 identity provider securing all services in the White Archive network.",
-    url: process.env.NEXT_PUBLIC_SSO_URL ?? "https://sso.suryatmaja.dev",
-    repo: "https://github.com/srytmj/sso.whitearchive",
+      "Centralized OAuth2 identity provider securing all services in the Yado network.",
+    url: process.env.NEXT_PUBLIC_SSO_URL ?? "https://sso.yado.my.id",
+    repo: "https://github.com/srytmj/sso.yado",
     category: "Identity",
     lifecycle: "production",
     version: "v1.2.4",
@@ -49,8 +49,8 @@ export const services: ServiceDef[] = [
       iconBg: "bg-sky-500/10 text-sky-400 border-sky-500/20",
     },
     quickLinks: [
-      { label: "Portal", url: "https://sso.suryatmaja.dev" },
-      { label: "Docs", url: "https://github.com/srytmj/sso.whitearchive#readme" },
+      { label: "Portal", url: "https://sso.yado.my.id" },
+      { label: "Docs", url: "https://github.com/srytmj/sso.yado#readme" },
     ],
   },
   {
@@ -59,7 +59,7 @@ export const services: ServiceDef[] = [
     tagline: "Core Service",
     description:
       "Core backend service for media catalog indexing, reading workflows, and data orchestration.",
-    url: process.env.NEXT_PUBLIC_MALAS_URL ?? "https://malas.suryatmaja.dev",
+    url: process.env.NEXT_PUBLIC_MALAS_URL ?? "https://malas.yado.my.id",
     repo: "https://github.com/srytmj/malas",
     category: "Core",
     lifecycle: "production",
@@ -72,7 +72,7 @@ export const services: ServiceDef[] = [
       iconBg: "bg-emerald-500/10 text-emerald-400 border-emerald-500/20",
     },
     quickLinks: [
-      { label: "Launch", url: "https://malas.suryatmaja.dev" },
+      { label: "Launch", url: "https://malas.yado.my.id" },
       { label: "API", url: "https://github.com/srytmj/malas#api" },
     ],
   },
@@ -83,7 +83,7 @@ export const services: ServiceDef[] = [
     description:
       "Digital reading engine and visual inspector for manga, EPUB, and signal archives.",
     url: "#",
-    repo: "https://github.com/srytmj/whitearchive",
+    repo: "https://github.com/srytmj/yado",
     category: "Reader",
     lifecycle: "development",
     version: "v0.4.0-alpha",
@@ -97,7 +97,7 @@ export const services: ServiceDef[] = [
     },
     quickLinks: [
       { label: "Docs", url: "/docs" },
-      { label: "Roadmap", url: "https://github.com/srytmj/whitearchive/tree/main/docs" },
+      { label: "Roadmap", url: "https://github.com/srytmj/yado/tree/main/docs" },
     ],
   },
   {
@@ -107,7 +107,7 @@ export const services: ServiceDef[] = [
     description:
       "Automated uptime tracking, response latency, and service availability monitors.",
     url: "#status",
-    repo: "https://github.com/srytmj/whitearchive",
+    repo: "https://github.com/srytmj/yado",
     category: "DevTools",
     lifecycle: "staging",
     version: "v0.9.1-rc",
@@ -127,9 +127,9 @@ export const services: ServiceDef[] = [
 ];
 
 export const ssoConfig = {
-  clientId: process.env.NEXT_PUBLIC_SSO_CLIENT_ID ?? "whitearchive-landing",
+  clientId: process.env.NEXT_PUBLIC_SSO_CLIENT_ID ?? "yado-landing",
   redirectUri: process.env.NEXT_PUBLIC_SSO_REDIRECT_URI ?? "",
-  authorizeUrl: `${process.env.NEXT_PUBLIC_SSO_URL ?? "https://sso.suryatmaja.dev"}/oauth/authorize`,
+  authorizeUrl: `${process.env.NEXT_PUBLIC_SSO_URL ?? "https://sso.yado.my.id"}/oauth/authorize`,
 };
 
 export function buildSsoLoginUrl() {

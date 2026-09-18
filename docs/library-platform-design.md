@@ -1,9 +1,9 @@
-# libs — Library / Connection Platform Design Doc
+# libs - Library / Connection Platform Design Doc
 
 > Status: **Draft / RFC** · Owner: Surya · Last updated: 2026-08-28
 >
-> **libs** — the multi-tenant library / connection service. Repo
-> `github.com/srytmj/libs`. Public host `libs.suryatmaja.dev`. Could alternatively
+> **libs** - the multi-tenant library / connection service. Repo
+> `github.com/srytmj/libs`. Public host `libs.yado.my.id`. Could alternatively
 > be shipped as the next major version of **Malas**.
 >
 > This is **Project A** of two. Project B is **[Pore.js](reader-engine-design.md)**,
@@ -13,7 +13,7 @@
 
 ## 1. Summary
 
-A multi-tenant backend that lets a White Archive user connect one or more of
+A multi-tenant backend that lets a Yado user connect one or more of
 **their own** self-hosted content servers (Komga first, Kavita later) and exposes
 a single **normalized read API** over all of them: libraries, series, books, page
 images, book files, and reading progress.
@@ -21,15 +21,15 @@ images, book files, and reading progress.
 The platform hosts **no content** and never holds the user's content-server
 credentials. Bytes are pulled on demand from the user's server through a thin
 outbound **agent** the user runs next to their library. Everything platform-side
-runs on the owner's **homelab** alongside the rest of White Archive.
+runs on the owner's **homelab** alongside the rest of Yado.
 
-The Reader UI is **not** part of this project — it is a separate, source-agnostic
+The Reader UI is **not** part of this project - it is a separate, source-agnostic
 frontend (Project B) that consumes the API in §10.
 
 ### Why this shape
 
 - **Learning / showcase goal (Project A)**: the novel part is the agent + relay
-  tunnel — Go, yamux multiplexing, reverse proxying, cache tiering, sync engine.
+  tunnel - Go, yamux multiplexing, reverse proxying, cache tiering, sync engine.
 - **No inbound firewall changes for users**: the agent dials *out*.
 - **No credential custody**: content-server credentials live only in the agent's
   local config. A platform DB leak exposes no content-server passwords.
@@ -57,7 +57,7 @@ frontend (Project B) that consumes the API in §10.
 - Hosting or storing content.
 - Discovery / recommendations / social features.
 - High availability. Residential infra, best-effort.
-- Replacing the user's library manager — the content server stays authoritative
+- Replacing the user's library manager - the content server stays authoritative
   for the catalog.
 
 ---
@@ -104,7 +104,7 @@ frontend (Project B) that consumes the API in §10.
 
 | Component | Tech | Responsibility |
 |---|---|---|
-| **BFF API** | Go (shares code with Relay — see §11) | SSO session, issue/verify signed media URLs, serve the normalized read API (§10), enqueue sync + progress-push jobs. |
+| **BFF API** | Go (shares code with Relay - see §11) | SSO session, issue/verify signed media URLs, serve the normalized read API (§10), enqueue sync + progress-push jobs. |
 | **Catalog + progress** | Postgres | `connection`, mirrored `series` / `book` index, `read_progress`. |
 | **Relay** | Go | Accept agent tunnels, multiplex HTTP into them, `/media/*` with cache tiering. |
 | **Agent** | Go, single static binary | Dial Relay, authenticate, run the Driver against the local content server. |
@@ -117,7 +117,7 @@ frontend (Project B) that consumes the API in §10.
 
 ### Transport
 
-- Agent opens **one** outbound `wss://relay.suryatmaja.dev/tunnel`.
+- Agent opens **one** outbound `wss://relay.yado.my.id/tunnel`.
 - Over it runs **[yamux](https://github.com/hashicorp/yamux)** (same approach as
   ngrok / frp). Each proxied request = a **new yamux stream**.
 - Relay implements `http.RoundTripper` with a `DialContext` that opens a yamux
@@ -146,14 +146,14 @@ frontend (Project B) that consumes the API in §10.
 - Control channel: yamux stream 0, newline-delimited JSON.
 - Request streams: `REQ` header (`op`, `args`, `request_id`, trace context) then
   optional body, response mirrored back.
-- Large bodies stream chunked — Relay never buffers a whole file.
+- Large bodies stream chunked - Relay never buffers a whole file.
 - Per-agent in-flight cap (default 8). Excess queues on the Relay side with a
   timeout, so a Raspberry Pi behind the agent isn't hammered.
 
 ### Agent constraints
 
 - Agent config pins **exactly one** content-server base URL.
-- Agent is **not** a general HTTP proxy — it only performs Driver operations.
+- Agent is **not** a general HTTP proxy - it only performs Driver operations.
 - Agent refuses link-local / cloud-metadata addresses even if misconfigured.
 
 ---
@@ -321,9 +321,9 @@ Single-flight per key. Best-effort, lower priority than live requests.
 
 ---
 
-## 10. Public read API — the contract with Pore.js (Project B)
+## 10. Public read API - the contract with Pore.js (Project B)
 
-Base: `https://libs.suryatmaja.dev/api/v1`. Auth: SSO session cookie **or**
+Base: `https://libs.yado.my.id/api/v1`. Auth: SSO session cookie **or**
 bearer token. All list endpoints are cursor-paginated and scoped to the caller.
 
 ```
@@ -361,7 +361,7 @@ PUT  /books/{id}/progress          { position, status, device_id }   (last-write
   platform stores it opaquely and only reads `status` + `updated_at`.
 - `media_url` entries are signed, expire in ~10 min, and are safe to hand
   straight to `<img src>` / `fetch`.
-- The reader never talks to the Relay directly; it only sees `libs.suryatmaja.dev`.
+- The reader never talks to the Relay directly; it only sees `libs.yado.my.id`.
 - This same surface is what a `DemoSource` / `LocalFileSource` in Project B mocks,
   so the reader repo runs with no backend.
 
@@ -372,7 +372,7 @@ PUT  /books/{id}/progress          { position, status, device_id }   (last-write
 Decision: **one Go binary for BFF + Relay** (or two binaries sharing a Go module).
 Reasons: the Drivers, media-signing, and cache code are shared; the reader SPA
 (Project B) becomes pure static hosting; cleaner microservices story. The
-alternative (Next route handlers) was rejected — it drags an unneeded SSR runtime
+alternative (Next route handlers) was rejected - it drags an unneeded SSR runtime
 and splits the toolchain.
 
 ---
@@ -381,23 +381,23 @@ and splits the toolchain.
 
 | Service | Host | Public? |
 |---|---|---|
-| `libs.suryatmaja.dev` (BFF API) | homelab | yes (HTTPS) |
-| `relay.suryatmaja.dev` (Relay + `/media`) | homelab | yes (HTTPS + WSS) |
+| `libs.yado.my.id` (BFF API) | homelab | yes (HTTPS) |
+| `relay.yado.my.id` (Relay + `/media`) | homelab | yes (HTTPS + WSS) |
 | Postgres, Redis, sync worker | homelab | internal |
 | **Agent** | **each user's** homelab | outbound only |
 | Reader static site (Project B) | homelab (or any static host / CDN) | yes |
 
-- Ingress via the existing White Archive reverse proxy. Register health endpoints
+- Ingress via the existing Yado reverse proxy. Register health endpoints
   so `library` + `relay` appear on the landing status dashboard
   (`src/lib/services.ts`).
 
-### Bandwidth — the real constraint
+### Bandwidth - the real constraint
 
 Every *first* read of every page for every user crosses the owner's home uplink
 (user server → homelab → reader). Cache only helps repeat reads. Mitigations:
 cache tiering, `w800`/`webp` variants, global Relay egress limiter, per-user
 fair-queuing. If it outgrows the homelab, **only the Relay + Redis + disk cache**
-needs to move to a VPS — it sits behind a clean interface.
+needs to move to a VPS - it sits behind a clean interface.
 
 ---
 
@@ -432,7 +432,7 @@ type Driver interface {
 | Risk | Stance for v1 |
 |---|---|
 | Home uplink saturation | Accept; cache hard; egress-limit; Relay portable to a VPS. |
-| Single Relay = SPOF, in-memory registry | Accept; agents auto-reconnect in seconds. Scale-out needs a shared registry — deferred. |
+| Single Relay = SPOF, in-memory registry | Accept; agents auto-reconnect in seconds. Scale-out needs a shared registry - deferred. |
 | Residential hosting a "platform" | Frame as showcase + small trusted user set. |
 | Proxying copyrighted material | Platform hosts nothing; users bring their own servers/content; keep invite-only. |
 | Agent binary trust | Open source, signed releases (GoReleaser + cosign), reproducible where feasible. |
@@ -445,18 +445,18 @@ type Driver interface {
 **Cut for v1**: Kavita, OPDS, image variants/transcoding, prefetch,
 progress push-back, multi-Relay scale-out.
 
-- **M0 — De-risk the tunnel (spike).** Minimal Relay + Agent: hardcoded token,
+- **M0 - De-risk the tunnel (spike).** Minimal Relay + Agent: hardcoded token,
   yamux over WSS, proxy one `GET` to `localhost:25600` and stream it back.
   Success = fetch a Komga cover through the agent from another network.
-- **M1 — Catalog + novel content.** SSO on the BFF. Add-server flow → token →
+- **M1 - Catalog + novel content.** SSO on the BFF. Add-server flow → token →
   agent connects → `status=online`. Sync libraries/series/books for EPUB/PDF.
   `/api/v1` list endpoints. `/books/{id}/file` → signed URL → whole-file fetch
   through the tunnel → disk cache. Progress GET/PUT.
-- **M2 — Manga content.** Page endpoints through the tunnel. Redis hot cache +
+- **M2 - Manga content.** Page endpoints through the tunnel. Redis hot cache +
   signed media URLs. Per-agent concurrency + per-connection sync rate limits.
-- **M3 — Operability.** Connection health, token rotate/revoke, landing status
+- **M3 - Operability.** Connection health, token rotate/revoke, landing status
   dashboard entries, metrics (§16), agent releases + docs.
-- **M4+** — prefetch → progress push-back → Kavita driver → image variants →
+- **M4+** - prefetch → progress push-back → Kavita driver → image variants →
   Relay scale-out.
 
 ---
@@ -472,7 +472,7 @@ progress push-back, multi-Relay scale-out.
 
 ---
 
-## Appendix A — Request path cheat-sheet
+## Appendix A - Request path cheat-sheet
 
 | User action (in the Reader) | Path |
 |---|---|

@@ -6,7 +6,7 @@ import { cn } from "@/lib/utils";
 
 /**
  * A full-viewport panel. Paired with `<SectionSnap />`, Lenis eases the
- * page to rest on whichever panel is nearest once scrolling settles — no
+ * page to rest on whichever panel is nearest once scrolling settles - no
  * native CSS scroll-snap involved.
  */
 export function ScrollSection({
