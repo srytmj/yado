@@ -23,7 +23,7 @@ export function StatusRow({
         <StatusDot status={status} />
         <span className="text-sm text-foreground/80">{service.name}</span>
       </div>
-      <span className="text-xs text-foreground/40 tabular-nums">
+      <span className="text-xs font-mono text-foreground/40 tabular-nums">
         {status === "unknown" ? "-" : status === "up" ? `${animatedLatency ?? 0}ms` : "unreachable"}
       </span>
     </li>

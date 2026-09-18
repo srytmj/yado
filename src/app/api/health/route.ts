@@ -22,17 +22,26 @@ async function ping(url: string | undefined, timeoutMs = 4000): Promise<{ status
 }
 
 export async function GET() {
-  const [sso, malas] = await Promise.all([
+  const requestStarted = Date.now();
+
+  const [sso, malas, libs] = await Promise.all([
     ping(process.env.SSO_HEALTH_URL),
     ping(process.env.MALAS_HEALTH_URL),
+    ping(process.env.LIBS_HEALTH_URL),
   ]);
 
-  // Telemetry endpoint self-health & pore development status
-  const telemetry = { status: "up" as Status, latencyMs: 8 };
+  // pore has no deployed backend yet (see services.ts) - nothing to probe.
   const pore = { status: "unknown" as Status, latencyMs: null };
+
+  // telemetry (this app) and gateway (the edge ingress that routed this
+  // request) are self-evidently up if this handler is running at all -
+  // their latency is this request's own round trip, not a hardcoded number.
+  const selfLatency = Date.now() - requestStarted;
+  const telemetry = { status: "up" as Status, latencyMs: selfLatency };
+  const gateway = { status: "up" as Status, latencyMs: selfLatency };
 
   return NextResponse.json({
     checkedAt: new Date().toISOString(),
-    services: { sso, malas, telemetry, pore },
+    services: { sso, malas, libs, pore, telemetry, gateway },
   });
 }

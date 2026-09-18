@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <style>
+    text {
+      fill: #6b7a5e;
+    }
+    @media (prefers-color-scheme: dark) {
+      text {
+        fill: #96a982;
+      }
+    }
+  </style>
+  <text
+    x="50%"
+    y="53%"
+    text-anchor="middle"
+    dominant-baseline="central"
+    font-family="'Shippori Mincho', 'Hiragino Mincho ProN', 'Yu Mincho', 'Noto Serif JP', serif"
+    font-weight="600"
+    font-size="52"
+  >宿</text>
+</svg>

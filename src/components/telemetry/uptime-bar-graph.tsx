@@ -9,6 +9,34 @@ interface UptimeBarGraphProps {
   uptimePercent: number;
 }
 
+const statusBg: Record<DailyUptimeBucket["status"], string> = {
+  operational: "bg-moss/80 hover:bg-moss",
+  degraded: "bg-ochre/85 hover:bg-ochre",
+  outage: "bg-clay/90 hover:bg-clay",
+  maintenance: "bg-indigo/85 hover:bg-indigo",
+};
+
+const statusText: Record<DailyUptimeBucket["status"], string> = {
+  operational: "text-moss",
+  degraded: "text-ochre",
+  outage: "text-clay",
+  maintenance: "text-indigo",
+};
+
+const statusDot: Record<DailyUptimeBucket["status"], string> = {
+  operational: "bg-moss",
+  degraded: "bg-ochre",
+  outage: "bg-clay",
+  maintenance: "bg-indigo",
+};
+
+const statusLabel: Record<DailyUptimeBucket["status"], string> = {
+  operational: "Operational",
+  degraded: "Degraded Performance",
+  outage: "Outage",
+  maintenance: "Maintenance",
+};
+
 export function UptimeBarGraph({ buckets, uptimePercent }: UptimeBarGraphProps) {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
 
@@ -17,20 +45,8 @@ export function UptimeBarGraph({ buckets, uptimePercent }: UptimeBarGraphProps) 
   return (
     <div className="relative w-full">
       {/* 90-Day Horizontal Bar Grid */}
-      <div
-        className="flex items-center gap-[2px] sm:gap-[3px] py-1"
-        onMouseLeave={() => setHoveredIndex(null)}
-      >
+      <div className="flex items-center gap-[2px] sm:gap-[3px] py-1" onMouseLeave={() => setHoveredIndex(null)}>
         {buckets.map((bucket, index) => {
-          let bgClass = "bg-emerald-500/80 hover:bg-emerald-400";
-          if (bucket.status === "degraded") {
-            bgClass = "bg-amber-500/85 hover:bg-amber-400";
-          } else if (bucket.status === "outage") {
-            bgClass = "bg-rose-500/90 hover:bg-rose-400";
-          } else if (bucket.status === "maintenance") {
-            bgClass = "bg-sky-500/85 hover:bg-sky-400";
-          }
-
           const isHovered = hoveredIndex === index;
 
           return (
@@ -40,8 +56,8 @@ export function UptimeBarGraph({ buckets, uptimePercent }: UptimeBarGraphProps) 
               className="relative flex-1 group cursor-pointer py-1"
             >
               <div
-                className={`h-8 w-full rounded-[2px] transition-all duration-150 ${bgClass} ${
-                  isHovered ? "scale-y-110 opacity-100 shadow-[0_0_8px_rgba(16,185,129,0.5)]" : "opacity-75 hover:opacity-100"
+                className={`h-7 w-full transition-all duration-150 ${statusBg[bucket.status]} ${
+                  isHovered ? "scale-y-110 opacity-100" : "opacity-70 hover:opacity-100"
                 }`}
               />
             </div>
@@ -57,40 +73,14 @@ export function UptimeBarGraph({ buckets, uptimePercent }: UptimeBarGraphProps) 
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 4, scale: 0.98 }}
             transition={{ duration: 0.15, ease: [0.16, 1, 0.3, 1] }}
-            className="pointer-events-none absolute -top-16 left-1/2 z-30 -translate-x-1/2 rounded-lg border border-foreground/15 bg-background/95 px-3 py-2 text-xs shadow-xl backdrop-blur-md"
+            className="pointer-events-none absolute -top-16 left-1/2 z-30 -translate-x-1/2 border border-hairline bg-background/95 px-3 py-2 text-xs shadow-lg backdrop-blur-md"
           >
             <div className="flex items-center gap-2 font-mono">
               <span className="font-semibold text-foreground">{activeBucket.dayLabel}</span>
-              <span className="text-foreground/30">•</span>
-              <span
-                className={`flex items-center gap-1 font-medium ${
-                  activeBucket.status === "operational"
-                    ? "text-emerald-400"
-                    : activeBucket.status === "degraded"
-                      ? "text-amber-400"
-                      : activeBucket.status === "outage"
-                        ? "text-rose-400"
-                        : "text-sky-400"
-                }`}
-              >
-                <span
-                  className={`inline-block h-1.5 w-1.5 rounded-full ${
-                    activeBucket.status === "operational"
-                      ? "bg-emerald-400"
-                      : activeBucket.status === "degraded"
-                        ? "bg-amber-400"
-                        : activeBucket.status === "outage"
-                          ? "bg-rose-400"
-                          : "bg-sky-400"
-                  }`}
-                />
-                {activeBucket.status === "operational"
-                  ? "Operational"
-                  : activeBucket.status === "degraded"
-                    ? "Degraded Performance"
-                    : activeBucket.status === "outage"
-                      ? "Outage"
-                      : "Maintenance"}
+              <span className="text-foreground/30">/</span>
+              <span className={`flex items-center gap-1 font-medium ${statusText[activeBucket.status]}`}>
+                <span className={`inline-block h-1.5 w-1.5 rounded-full ${statusDot[activeBucket.status]}`} />
+                {statusLabel[activeBucket.status]}
               </span>
               <span className="text-foreground/45">({activeBucket.uptimePercent}% uptime)</span>
             </div>

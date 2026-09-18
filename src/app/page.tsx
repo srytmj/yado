@@ -13,12 +13,12 @@ export default function Home() {
         </section>
 
         {/* Microservices & Portals Registry Section */}
-        <section id="services" className="relative scroll-mt-24 py-16 sm:py-24">
+        <section id="services" className="relative scroll-mt-24 border-t border-hairline py-16 sm:py-24">
           <ServiceGrid />
         </section>
 
         {/* Fleet Health Telemetry Section */}
-        <section id="status" className="relative scroll-mt-24 py-16 sm:py-24">
+        <section id="status" className="relative scroll-mt-24 border-t border-hairline py-16 sm:py-24">
           <StatusDashboard />
         </section>
       </main>

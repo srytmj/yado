@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useLenis } from "lenis/react";
-import { Search, Layers } from "lucide-react";
+import { Search } from "lucide-react";
 import { openCommandPalette } from "@/hooks/use-command-palette";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { SsoProfileWidget } from "@/components/sso-profile-widget";
@@ -48,69 +48,55 @@ export function Navbar() {
   return (
     <header
       className={`fixed top-0 left-0 right-0 z-40 w-full transition-all duration-300 ${
-        isScrolled
-          ? "border-b border-foreground/10 bg-background/80 backdrop-blur-md shadow-sm"
-          : "border-b border-transparent bg-transparent"
+        isScrolled ? "border-b border-hairline bg-background/85 backdrop-blur-md" : "border-b border-transparent bg-transparent"
       }`}
     >
-      <div className="mx-auto flex h-14 max-w-5xl items-center justify-between px-6">
+      <div className="mx-auto flex h-16 max-w-5xl items-center justify-between px-6">
         {/* Kiri: Brand & Navigasi Halaman */}
-        <div className="flex items-center gap-8">
+        <div className="flex items-center gap-10">
           <Link
             href="/"
             onClick={handleScrollToTop}
-            className="flex items-center gap-2.5 text-foreground transition-opacity hover:opacity-80 cursor-pointer"
+            className="flex items-baseline gap-2 text-foreground transition-opacity hover:opacity-75"
           >
-            <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-foreground text-background">
-              <Layers className="h-4 w-4" />
-            </div>
-            <span className="text-sm font-semibold tracking-tight">Yado</span>
-            <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" title="Hub Operational" />
+            <span className="font-jp text-lg text-moss">宿</span>
+            <span className="font-serif text-base font-semibold tracking-tight">Yado</span>
           </Link>
 
-          <nav className="hidden md:flex items-center gap-6 text-xs font-medium text-foreground/60">
-            <Link
-              href="/#services"
-              onClick={handleSmoothScroll("#services")}
-              className="transition-colors hover:text-foreground cursor-pointer"
-            >
+          <nav className="hidden md:flex items-center gap-7 text-xs font-medium uppercase tracking-[0.12em] text-foreground/55">
+            <Link href="/#services" onClick={handleSmoothScroll("#services")} className="border-b border-transparent pb-0.5 transition-colors hover:border-foreground/40 hover:text-foreground">
               Services
             </Link>
-            <Link
-              href="/status"
-              className="transition-colors hover:text-foreground"
-            >
-              System Status
+            <Link href="/status" className="border-b border-transparent pb-0.5 transition-colors hover:border-foreground/40 hover:text-foreground">
+              Status
             </Link>
-            <Link
-              href="/docs"
-              className="transition-colors hover:text-foreground"
-            >
-              Documentation
+            <Link href="/docs" className="border-b border-transparent pb-0.5 transition-colors hover:border-foreground/40 hover:text-foreground">
+              Docs
             </Link>
           </nav>
         </div>
 
         {/* Kanan: Search Trigger, SSO Profile Widget, dan Theme Toggle */}
-        <div className="flex items-center gap-2.5">
+        <div className="flex items-center gap-3">
           <button
             onClick={openCommandPalette}
-            className={`flex items-center gap-2 rounded-lg border px-3 py-1.5 text-xs text-foreground/60 transition-all hover:text-foreground ${
-              isScrolled
-                ? "border-foreground/10 bg-foreground/[0.03] hover:border-foreground/25"
-                : "border-foreground/15 bg-background/40 backdrop-blur-sm hover:border-foreground/30"
-            }`}
+            className="sm:hidden flex h-8 w-8 items-center justify-center border border-hairline text-foreground/55 transition-colors hover:border-foreground/30 hover:text-foreground"
+            aria-label="Search"
           >
-            <Search className="h-3.5 w-3.5 text-foreground/40" />
-            <span className="hidden sm:inline">Search...</span>
-            <kbd className="rounded border border-foreground/15 bg-foreground/5 px-1.5 py-0.5 text-[10px] font-mono text-foreground/50">
-              Ctrl K
-            </kbd>
+            <Search className="h-3.5 w-3.5" strokeWidth={1.5} />
+          </button>
+          <button
+            onClick={openCommandPalette}
+            className="hidden sm:flex items-center gap-2 border border-hairline px-3 py-1.5 text-xs text-foreground/55 transition-colors hover:border-foreground/30 hover:text-foreground"
+          >
+            <Search className="h-3.5 w-3.5" strokeWidth={1.5} />
+            <span>Search</span>
+            <kbd className="border border-hairline px-1.5 py-0.5 text-[10px] font-mono text-foreground/45">Ctrl K</kbd>
           </button>
 
           <SsoProfileWidget />
 
-          <div className="border-l border-foreground/10 pl-2">
+          <div className="border-l border-hairline pl-3">
             <ThemeToggle />
           </div>
         </div>

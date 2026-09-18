@@ -3,7 +3,7 @@
 import { useEffect, useState, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Search, ArrowUpRight, ShieldCheck, Sparkles, BookOpen, Activity, Command, X } from "lucide-react";
-import { services } from "@/lib/services";
+import { services, lifecycleAccent } from "@/lib/services";
 
 interface CommandPaletteProps {
   isOpen: boolean;
@@ -104,11 +104,11 @@ export function CommandPalette({ isOpen, onClose }: CommandPaletteProps) {
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.96, y: -10 }}
             transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
-            className="relative w-full max-w-xl overflow-hidden rounded-2xl border border-foreground/15 bg-background shadow-2xl shadow-foreground/5 dark:shadow-black/50"
+            className="relative w-full max-w-xl overflow-hidden border border-hairline bg-background shadow-xl shadow-foreground/5 dark:shadow-black/40"
           >
             {/* Search Input Bar */}
-            <div className="flex items-center gap-3 border-b border-foreground/10 px-4 py-3.5">
-              <Search className="h-5 w-5 text-foreground/40 shrink-0" />
+            <div className="flex items-center gap-3 border-b border-hairline px-4 py-3.5">
+              <Search className="h-5 w-5 text-foreground/40 shrink-0" strokeWidth={1.5} />
               <input
                 type="text"
                 autoFocus
@@ -117,7 +117,7 @@ export function CommandPalette({ isOpen, onClose }: CommandPaletteProps) {
                   setQuery(e.target.value);
                   setSelectedIndex(0);
                 }}
-                placeholder="Jump to microservice, portal, or doc..."
+                placeholder="Jump to a service or portal..."
                 className="w-full bg-transparent text-sm text-foreground outline-none placeholder:text-foreground/40"
               />
               {query && (
@@ -126,12 +126,12 @@ export function CommandPalette({ isOpen, onClose }: CommandPaletteProps) {
                     setQuery("");
                     setSelectedIndex(0);
                   }}
-                  className="rounded p-1 text-foreground/40 hover:text-foreground hover:bg-foreground/5"
+                  className="p-1 text-foreground/40 hover:text-foreground hover:bg-foreground/5"
                 >
                   <X className="h-4 w-4" />
                 </button>
               )}
-              <div className="flex items-center gap-1 rounded border border-foreground/15 bg-foreground/5 px-1.5 py-0.5 text-[10px] font-mono text-foreground/50">
+              <div className="flex items-center gap-1 border border-hairline px-1.5 py-0.5 text-[10px] font-mono text-foreground/50">
                 <span>ESC</span>
               </div>
             </div>
@@ -150,6 +150,7 @@ export function CommandPalette({ isOpen, onClose }: CommandPaletteProps) {
                   {filtered.map((item, index) => {
                     const Icon = iconMap[item.iconName] || Sparkles;
                     const isSelected = index === activeIndex;
+                    const accent = lifecycleAccent[item.lifecycle];
 
                     return (
                       <div
@@ -161,24 +162,18 @@ export function CommandPalette({ isOpen, onClose }: CommandPaletteProps) {
                             onClose();
                           }
                         }}
-                        className={`group flex items-center justify-between rounded-xl px-3 py-2.5 cursor-pointer transition-colors ${
-                          isSelected
-                            ? "bg-foreground/10 text-foreground"
-                            : "hover:bg-foreground/5 text-foreground/80"
+                        className={`group flex items-center justify-between px-3 py-2.5 cursor-pointer transition-colors ${
+                          isSelected ? "bg-foreground/[0.06] text-foreground" : "hover:bg-foreground/[0.03] text-foreground/80"
                         }`}
                       >
                         <div className="flex items-center gap-3 min-w-0">
-                          <div
-                            className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border ${item.accent.iconBg}`}
-                          >
-                            <Icon className="h-4 w-4" />
+                          <div className="flex h-9 w-9 shrink-0 items-center justify-center border border-hairline text-foreground/50">
+                            <Icon className="h-4 w-4" strokeWidth={1.5} />
                           </div>
                           <div className="min-w-0">
                             <div className="flex items-center gap-2">
                               <span className="text-sm font-medium truncate">{item.name}</span>
-                              <span
-                                className={`rounded-full border px-1.5 py-0.2 text-[10px] font-mono capitalize ${item.accent.badge}`}
-                              >
+                              <span className={`border px-1.5 py-0.2 text-[10px] font-mono capitalize ${accent.badge}`}>
                                 {item.lifecycle}
                               </span>
                             </div>
@@ -187,10 +182,10 @@ export function CommandPalette({ isOpen, onClose }: CommandPaletteProps) {
                         </div>
 
                         <div className="flex items-center gap-2 shrink-0">
-                          <span className="hidden sm:inline-block rounded border border-foreground/10 bg-foreground/5 px-1.5 py-0.5 text-[10px] font-mono text-foreground/40">
+                          <span className="hidden sm:inline-block border border-hairline px-1.5 py-0.5 text-[10px] font-mono text-foreground/40">
                             [{index + 1}]
                           </span>
-                          <ArrowUpRight className="h-4 w-4 text-foreground/30 group-hover:text-foreground transition-colors" />
+                          <ArrowUpRight className="h-4 w-4 text-foreground/30 group-hover:text-foreground transition-colors" strokeWidth={1.5} />
                         </div>
                       </div>
                     );
@@ -200,21 +195,21 @@ export function CommandPalette({ isOpen, onClose }: CommandPaletteProps) {
             </div>
 
             {/* Footer Hints */}
-            <div className="flex items-center justify-between border-t border-foreground/10 bg-foreground/[0.02] px-4 py-2 text-[11px] text-foreground/45">
+            <div className="flex items-center justify-between border-t border-hairline bg-foreground/[0.015] px-4 py-2 text-[11px] text-foreground/45">
               <div className="flex items-center gap-3">
                 <span className="flex items-center gap-1">
-                  <kbd className="rounded border border-foreground/15 bg-foreground/5 px-1 font-mono">↑</kbd>
-                  <kbd className="rounded border border-foreground/15 bg-foreground/5 px-1 font-mono">↓</kbd> navigate
+                  <kbd className="border border-hairline px-1 font-mono">↑</kbd>
+                  <kbd className="border border-hairline px-1 font-mono">↓</kbd> navigate
                 </span>
                 <span className="flex items-center gap-1">
-                  <kbd className="rounded border border-foreground/15 bg-foreground/5 px-1 font-mono">↵</kbd> open
+                  <kbd className="border border-hairline px-1 font-mono">↵</kbd> open
                 </span>
                 <span className="hidden sm:inline-flex items-center gap-1">
-                  <kbd className="rounded border border-foreground/15 bg-foreground/5 px-1 font-mono">[1-9]</kbd> quick jump
+                  <kbd className="border border-hairline px-1 font-mono">[1-9]</kbd> quick jump
                 </span>
               </div>
               <div className="flex items-center gap-1">
-                <Command className="h-3 w-3" />
+                <Command className="h-3 w-3" strokeWidth={1.5} />
                 <span>Yado</span>
               </div>
             </div>

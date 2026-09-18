@@ -3,8 +3,8 @@ import { cn } from "@/lib/utils";
 type Status = "up" | "down" | "unknown";
 
 const styles: Record<Status, { dot: string; ring: string }> = {
-  up: { dot: "bg-emerald-400", ring: "bg-emerald-400/40" },
-  down: { dot: "bg-red-400", ring: "bg-red-400/40" },
+  up: { dot: "bg-moss", ring: "bg-moss/40" },
+  down: { dot: "bg-clay", ring: "bg-clay/40" },
   unknown: { dot: "bg-foreground/30", ring: "bg-foreground/10" },
 };
 

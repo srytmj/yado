@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Search, Shield, ArrowRight, Activity, Server } from "lucide-react";
+import { Search, ShieldCheck, Activity, DoorOpen } from "lucide-react";
 import { SsoLoginButton } from "@/components/sso-login-button";
 import { AnimatedHeadline } from "@/components/interactive/animated-headline";
 import { openCommandPalette } from "@/hooks/use-command-palette";
@@ -22,97 +22,78 @@ export function Hero() {
       variants={container}
       initial="hidden"
       animate="show"
-      className="mx-auto flex max-w-4xl flex-col items-center px-6 pt-28 pb-16 sm:pt-36 sm:pb-24 text-center"
+      className="mx-auto flex w-full max-w-5xl flex-col px-6 pt-36 pb-20 sm:pt-44 sm:pb-28"
     >
-      {/* Status Pill */}
-      <motion.div
-        variants={item}
-        className="mb-8 inline-flex items-center gap-2 rounded-full border border-foreground/10 bg-foreground/[0.03] px-4 py-1.5 text-xs text-foreground/70 backdrop-blur-md"
-      >
-        <span className="flex h-2 w-2 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.6)]" />
-        <span className="font-medium">Launcher Hub</span>
-        <span className="text-foreground/30">•</span>
-        <span className="text-foreground/50">SSO Ready</span>
-      </motion.div>
+      {/* Headline - asymmetric: left column of text, generous space to the right */}
+      <div className="max-w-3xl">
+        <h1 className="font-serif text-5xl leading-[1.08] tracking-tight text-foreground sm:text-6xl md:text-7xl">
+          <motion.span variants={item} className="block font-bold">
+            <AnimatedHeadline text="One" delay={100} className="inline-block" />{" "}
+            <AnimatedHeadline text="roof." delay={220} className="inline-block italic" />
+          </motion.span>
+          <motion.span variants={item} className="mt-1 block font-sans text-4xl font-light text-foreground/75 sm:text-5xl md:text-6xl">
+            Every service welcome.
+          </motion.span>
+        </h1>
 
-      {/* Headline */}
-      <motion.h1
-        variants={item}
-        className="text-4xl font-semibold tracking-tight text-foreground sm:text-6xl md:text-7xl leading-[1.12]"
-      >
-        <AnimatedHeadline text="One archive." delay={200} className="inline-block" />
-        <br />
-        <span className="inline-block bg-gradient-to-r from-foreground via-foreground/90 to-foreground/40 bg-clip-text text-transparent">
-          Every service, one door.
-        </span>
-      </motion.h1>
+        {/* Tagline: kanji as a small focal mark alongside the romanized reading */}
+        <motion.div variants={item} className="mt-8 flex items-baseline gap-3">
+          <span className="font-jp text-3xl text-moss sm:text-4xl">宿</span>
+          <span className="text-xs uppercase tracking-[0.2em] text-foreground/45 sm:text-sm">
+            (yado) - a place to stay.
+          </span>
+        </motion.div>
+      </div>
 
       {/* Subtext */}
-      <motion.p
-        variants={item}
-        className="mt-8 max-w-2xl text-balance text-base text-foreground/60 sm:text-lg leading-relaxed"
-      >
-        Primary entry point to web applications, internal microservices, and active projects across the Yado network.
+      <motion.p variants={item} className="mt-10 max-w-xl text-balance text-base leading-relaxed text-foreground/60">
+        Entry point to every self-hosted service, portal, and project running under the Yado roof.
       </motion.p>
 
-      {/* Quick Interactive Search */}
+      {/* Quick Search */}
       <motion.div variants={item} className="mt-10 w-full max-w-md">
         <button
           onClick={openCommandPalette}
-          className="group relative flex w-full items-center justify-between rounded-2xl border border-foreground/15 bg-foreground/[0.03] px-5 py-3.5 text-left text-sm text-foreground/50 shadow-sm backdrop-blur-sm transition-all hover:border-foreground/30 hover:bg-foreground/[0.06]"
+          className="group flex w-full items-center justify-between border border-hairline px-5 py-3.5 text-left text-sm text-foreground/50 transition-colors hover:border-foreground/30"
         >
           <div className="flex items-center gap-3">
             <Search className="h-4 w-4 text-foreground/40 group-hover:text-foreground/80 transition-colors" />
             <span className="group-hover:text-foreground/80 transition-colors">
-              Search microservices or portals...
+              Search services or portals...
             </span>
           </div>
-          <div className="flex items-center gap-1 rounded-md border border-foreground/15 bg-foreground/5 px-2 py-0.5 text-[11px] font-mono text-foreground/60">
+          <div className="flex items-center gap-1 border border-hairline px-2 py-0.5 text-[11px] font-mono text-foreground/50">
             <span>Ctrl + K</span>
           </div>
         </button>
       </motion.div>
 
-      {/* Action Buttons with Smooth Hover Animation (No jitter/getar) */}
-      <motion.div variants={item} className="mt-8 flex flex-wrap items-center justify-center gap-3">
-        <motion.div
-          whileHover={{ scale: 1.025, y: -1 }}
-          whileTap={{ scale: 0.98 }}
-          transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
+      {/* Actions */}
+      <motion.div variants={item} className="mt-8 flex flex-wrap items-center gap-6">
+        <SsoLoginButton />
+        <a
+          href="#services"
+          className="group inline-flex items-center gap-2 text-base font-medium text-foreground/75 transition-colors hover:text-foreground"
         >
-          <SsoLoginButton />
-        </motion.div>
-        <motion.div
-          whileHover={{ scale: 1.025, y: -1 }}
-          whileTap={{ scale: 0.98 }}
-          transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
-        >
-          <a
-            href="#services"
-            className="inline-flex items-center gap-2 rounded-full border border-foreground/15 bg-background/50 px-6 py-3 text-base font-medium text-foreground/80 backdrop-blur-md transition-colors hover:border-foreground/30 hover:text-foreground"
-          >
-            <span>Browse Services</span>
-            <ArrowRight className="h-4 w-4 text-foreground/50" />
-          </a>
-        </motion.div>
+          <span className="border-b border-transparent pb-0.5 group-hover:border-foreground/40">
+            Browse services
+          </span>
+          <DoorOpen className="h-4 w-4 text-foreground/40 transition-transform group-hover:translate-x-0.5" />
+        </a>
       </motion.div>
 
-      {/* System Features */}
+      {/* Quiet feature strip */}
       <motion.div
         variants={item}
-        className="mt-16 flex flex-wrap items-center justify-center gap-8 text-xs text-foreground/45 border-t border-foreground/10 pt-8"
+        className="mt-16 flex flex-wrap items-center gap-x-8 gap-y-3 border-t border-hairline pt-8 text-xs text-foreground/50"
       >
         <div className="flex items-center gap-2">
-          <Shield className="h-3.5 w-3.5 text-sky-400" />
-          <span>OAuth2 Single Sign-On</span>
+          <ShieldCheck className="h-3.5 w-3.5 text-indigo" strokeWidth={1.5} />
+          <span>Single sign-on across every room</span>
         </div>
         <div className="flex items-center gap-2">
-          <Activity className="h-3.5 w-3.5 text-emerald-400" />
-          <span>Live Health Check</span>
-        </div>
-        <div className="flex items-center gap-2">
-          <Server className="h-3.5 w-3.5 text-purple-400" />
-          <span>Microservices Fleet</span>
+          <Activity className="h-3.5 w-3.5 text-moss" strokeWidth={1.5} />
+          <span>Live health, checked continuously</span>
         </div>
       </motion.div>
     </motion.section>

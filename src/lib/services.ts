@@ -20,14 +20,17 @@ export interface ServiceDef {
   version: string;
   progress?: number;
   iconName: "ShieldCheck" | "Sparkles" | "BookOpen" | "Activity";
-  accent: {
-    badge: string;
-    borderHover: string;
-    glow: string;
-    iconBg: string;
-  };
   quickLinks?: QuickLink[];
 }
+
+// A single accent per lifecycle stage, rather than one-off colors per
+// service - keeps the room-directory list reading as one calm palette
+// instead of a rainbow of per-card tints.
+export const lifecycleAccent: Record<ServiceLifecycle, { label: string; text: string; badge: string }> = {
+  production: { label: "production", text: "text-moss", badge: "border-moss/30 bg-moss-soft text-moss" },
+  staging: { label: "staging", text: "text-ochre", badge: "border-ochre/30 bg-ochre-soft text-ochre" },
+  development: { label: "development", text: "text-indigo", badge: "border-indigo/30 bg-indigo-soft text-indigo" },
+};
 
 export const services: ServiceDef[] = [
   {
@@ -42,12 +45,6 @@ export const services: ServiceDef[] = [
     lifecycle: "production",
     version: "v1.2.4",
     iconName: "ShieldCheck",
-    accent: {
-      badge: "border-sky-500/30 bg-sky-500/10 text-sky-400",
-      borderHover: "hover:border-sky-500/40",
-      glow: "from-sky-500/10 via-transparent to-transparent",
-      iconBg: "bg-sky-500/10 text-sky-400 border-sky-500/20",
-    },
     quickLinks: [
       { label: "Portal", url: "https://sso.yado.my.id" },
       { label: "Docs", url: "https://github.com/srytmj/sso.yado#readme" },
@@ -65,12 +62,6 @@ export const services: ServiceDef[] = [
     lifecycle: "production",
     version: "v1.0.0",
     iconName: "Sparkles",
-    accent: {
-      badge: "border-emerald-500/30 bg-emerald-500/10 text-emerald-400",
-      borderHover: "hover:border-emerald-500/40",
-      glow: "from-emerald-500/10 via-transparent to-transparent",
-      iconBg: "bg-emerald-500/10 text-emerald-400 border-emerald-500/20",
-    },
     quickLinks: [
       { label: "Launch", url: "https://malas.yado.my.id" },
       { label: "API", url: "https://github.com/srytmj/malas#api" },
@@ -89,12 +80,6 @@ export const services: ServiceDef[] = [
     version: "v0.4.0-alpha",
     progress: 70,
     iconName: "BookOpen",
-    accent: {
-      badge: "border-purple-500/30 bg-purple-500/10 text-purple-400",
-      borderHover: "hover:border-purple-500/40",
-      glow: "from-purple-500/10 via-transparent to-transparent",
-      iconBg: "bg-purple-500/10 text-purple-400 border-purple-500/20",
-    },
     quickLinks: [
       { label: "Docs", url: "/docs" },
       { label: "Roadmap", url: "https://github.com/srytmj/yado/tree/main/docs" },
@@ -113,12 +98,6 @@ export const services: ServiceDef[] = [
     version: "v0.9.1-rc",
     progress: 90,
     iconName: "Activity",
-    accent: {
-      badge: "border-amber-500/30 bg-amber-500/10 text-amber-400",
-      borderHover: "hover:border-amber-500/40",
-      glow: "from-amber-500/10 via-transparent to-transparent",
-      iconBg: "bg-amber-500/10 text-amber-400 border-amber-500/20",
-    },
     quickLinks: [
       { label: "Endpoint", url: "/api/health" },
       { label: "Dashboard", url: "#status" },

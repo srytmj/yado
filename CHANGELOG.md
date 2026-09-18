@@ -13,6 +13,71 @@ git restore .
 
 ## Riwayat Perubahan
 
+### v0.4.0 - 2026-09-19
+
+Redesign visual total "Digital Ryokan" dan perbaikan sumber data telemetri palsu:
+
+#### Desain: Sistem Warna & Tipografi
+- `src/app/globals.css`:
+  - Mengganti seluruh token warna dashboard-gelap (`#ffffff`/`#000000` + `--grid-line`) dengan palet krem hangat (`#f5efe6`) dan empat aksen bumi: indigo (`#2c3e50`, dye shibori), moss (`#6b7a5e`), ochre (`#a9762e`), clay (`#b15533`) - masing-masing punya varian gelap dan varian "soft" (`color-mix` untuk latar badge).
+  - Menambahkan token `--hairline` untuk garis pembatas tipis pengganti border/shadow tebal ala kartu SaaS.
+  - Mendaftarkan font custom ke `@theme inline`: `--font-serif` (Fraunces), `--font-sans` (General Sans), `--font-jp` (Shippori Mincho), `--font-mono` (Geist Mono tetap dipakai untuk angka/telemetri).
+- `src/app/fonts/general-sans/*.woff2`:
+  - Mengunduh dan self-host 4 berat General Sans (Light/Regular/Medium/Semibold) dari Fontshare (lisensi gratis) via `next/font/local`, karena font ini tidak tersedia di Google Fonts.
+- `src/app/layout.tsx`:
+  - Mengganti Geist Sans dengan `Fraunces` (headline serif, axes opsz/SOFT/WONK, italic) + `General Sans` (body/UI) + `Shippori Mincho` (aksen kanji 宿, tervalidasi mengandung glyph CJK penuh meski terdaftar subset "latin" di metadata next/font).
+  - Memperbarui metadata judul/deskripsi situs ke narasi "a place to stay".
+
+#### Desain: Komponen
+- `src/components/hero.tsx`: Headline dua baris baru ("One *roof*." serif bold/italic + "Every service welcome." sans light), tagline kanji 宿 berwarna moss dengan romanisasi "(yado) - a place to stay.", layout asimetris rata-kiri (bukan simetris terpusat), search bar & tombol tanpa `rounded-full`/glow, micro-interaction diturunkan ke underline/opacity halus (menghapus wrapper `whileHover scale` yang terkesan seperti dashboard).
+- `src/components/navbar.tsx`: Disederhanakan jadi wordmark serif + kanji kecil, label nav huruf besar dengan tracking lebar, underline-on-hover, search trigger & kbd hint berbentuk kotak hairline (bukan pill).
+- `src/components/service-grid.tsx`: Bento grid kartu diganti total menjadi **daftar "room directory"** - satu kolom, setiap layanan dipisah garis hairline (bukan kartu berbayang), tab filter jadi underline-sliding (bukan pill terisi), badge lifecycle terpusat lewat helper baru `lifecycleAccent` di `src/lib/services.ts` (production=moss, staging=ochre, development=indigo) menggantikan field `accent` per-layanan yang tadinya hardcode warna sky/emerald/purple/amber.
+- `src/components/interactive/tilt-card.tsx`: **Dihapus** - efek tilt/glare 3D sudah tidak dipakai di mana pun setelah service-grid pindah ke gaya list hairline (bertentangan dengan aturan "no glow/scale-up" desain baru).
+- `src/components/status-dashboard.tsx`, `src/components/status-row.tsx`, `src/components/status-dot.tsx`: Recolor dari emerald/red neon ke moss/clay, border tebal diganti hairline.
+- `src/components/footer.tsx`: Disederhanakan jadi signature kanji 宿 di tengah + link minimal, sesuai spek "small kanji as a signature mark".
+- `src/components/background-glow.tsx`: Grid teknis + orb neon (fuchsia/sky) diganti tekstur washi (noise SVG `feTurbulence` tipis) + wash hangat indigo/moss redup.
+- `src/components/sso-login-button.tsx`, `src/components/sso-profile-widget.tsx`, `src/components/theme-toggle.tsx`, `src/components/interactive/command-palette.tsx`: Recolor menyeluruh ke token indigo/moss/ochre/clay + hairline, radius kotak dipertajam (bukan rounded-2xl/pill).
+- `src/components/telemetry/uptime-bar-graph.tsx`, `src/components/telemetry/incident-history.tsx`: Recolor status (operational=moss, degraded=ochre, outage=clay, maintenance=indigo), border hairline.
+- `src/app/docs/page.tsx`, `src/app/status/page.tsx`: Recolor total + restyle tabel/kartu metrik ke gaya hairline-divided, heading pakai `font-serif`.
+- `src/app/page.tsx`: Menambahkan `border-t border-hairline` di antar-seksi sebagai pembatas "kertas washi" dan menambah animasi stagger `whileInView` pada `ServiceGrid` agar konsisten dengan aturan animasi wajib di `AGENTS.md`.
+
+#### Perbaikan Fungsional: Telemetri Data Nyata (bukan angka palsu)
+- `src/app/api/health/route.ts`:
+  - Menambahkan probe real untuk `libs` via env `LIBS_HEALTH_URL` (pola sama seperti `sso`/`malas`, default `unknown` jika belum dikonfigurasi - bukan tebakan).
+  - `telemetry` (aplikasi ini sendiri) dan `gateway` (edge ingress yang meneruskan request ini) sekarang dianggap "up" secara self-evident dengan latency dihitung dari durasi request itu sendiri (`Date.now() - requestStarted`), menggantikan angka hardcode `latencyMs: 8`.
+- `.env.example`: Menambahkan `LIBS_HEALTH_URL` (kosong/opsional, dengan komentar penjelasan).
+- `src/lib/telemetry.ts` (**rewrite total**):
+  - Menghapus seluruh data 90-hari yang di-hardcode manual (`specialDays` naratif yang ditulis tangan, terpisah dari `incidents.json` yang sebenarnya).
+  - Bucket 90-hari kini diturunkan langsung dari `src/data/incidents.json`: field `date` ("Today (...)" / "N days ago") di-parse jadi offset hari, `severity` dipetakan ke `DayStatus`, dan `duration` (mis. "38 minutes") dipakai menghitung persentase uptime hari itu secara matematis - bukan angka karangan.
+  - `uptime90d` per layanan kini rata-rata asli dari 90 bucket, bukan konstanta (`99.98`, `99.94`, dst.) yang ditulis tangan.
+  - `currentStatus` dan `avgLatencyMs` sekarang diisi dari `HealthResponse` live (`useHealth()`/`/api/health`) via parameter baru `getTelemetryData(liveHealth)`, bukan `currentStatus: "up"` yang di-hardcode untuk semua layanan.
+- `src/app/status/page.tsx`:
+  - Memperbaiki bug nyata di tabel "Live Endpoint Probes": kondisi `isLiveUp ? "Operational" : "Operational"` sebelumnya selalu menampilkan "Operational" apa pun hasil probe-nya - sekarang menampilkan status asli (Operational/Unreachable/No live probe) dari data live.
+  - Banner utama dan kartu ringkasan metrik ("90-Day Uptime", "Avg Latency", "90d Incidents") kini dihitung dari data live + incident log asli, bukan teks statis "All Systems Operational" / "90-Day SLA Target: Met".
+  - Memperbaiki bug tampilan lanjutan: `networkAvgLatencyMs` sempat bertipe `number` dengan fallback `0`, sehingga probe self-check yang benar-benar bernilai `0ms` salah tertampil sebagai "-" (dikira "tidak ada data"). Diperbaiki dengan tipe `number | null` agar `0ms` asli tetap tampil sebagai `0ms`.
+
+#### Copy
+- Headline, tagline, dan seluruh copy pendukung (hero, feature strip, status page, docs) diselaraskan ke nuansa "digital ryokan" sambil tetap mengikuti Aturan 3 (bahasa teknis lugas, tanpa hiperbola marketing, tanpa em dash).
+
+#### Penyesuaian Lanjutan (feedback langsung)
+- `src/components/background-glow.tsx`: Tekstur washi paper dinaikkan intensitasnya (dua layer noise - mottling kasar + grain halus, masing-masing di-desaturasi lewat `feColorMatrix`) karena versi awal terlalu polos/nyaris tak terlihat; tetap dijaga redup (opacity 0.05-0.13) dan blend `multiply`/`overlay` agar tidak mengganggu keterbacaan UI atau terkesan berlebihan.
+  - Revisi lanjutan: layer noise `feTurbulence` asimetris (baseFrequency `0.012 0.09`) ternyata terlihat seperti serat kayu, bukan kertas. Diganti dengan kisi tipis ala shoji (`repeating-linear-gradient` crosshatch, geometris & non-organik) + satu layer grain isotropik (baseFrequency simetris `0.85`, tanpa arah dominan) agar kesan tetap modern dan Jepang tanpa terlihat seperti tekstur kayu.
+- `src/app/docs/page.tsx`: Seksi 4 ("Telemetry & Incident Reporting") sekarang dibatasi hanya untuk sesi dengan role Owner/Sysadmin (`useSsoSession`) - pengunjung biasa melihat panel "Admin access required" dengan tombol sign-in, bukan instruksi CLI/AI mentah. Catatan: ini adalah gerbang tampilan sisi klien (bukan proteksi server-side), konsisten dengan pola sesi demo yang sudah ada di `use-sso-session.ts`.
+- `src/components/interactive/cursor-spotlight.tsx`: **Dihapus** beserta pemanggilannya di `src/app/layout.tsx` - efek radial glow lembut yang mengikuti kursor dihilangkan sepenuhnya atas permintaan langsung.
+
+### v0.5.0 - 2026-09-19
+
+Background art Bauhaus line-art, favicon kanji final, scrollbar bertema, dan pengetatan admin gate di `/docs`:
+
+- `src/components/background-glow.tsx` (**rewrite total**, beberapa iterasi berdasarkan referensi visual langsung dari user):
+  - Kisi shoji sebelumnya diganti komposisi "Bauhaus line-art": motif `Ribbon` (bundel garis paralel yang membentuk satu tikungan membulat - radius bertambah per salinan dengan titik pusat arc yang sama, sehingga benar-benar sejajar, bukan sekadar garis yang saling tumpuk) dan `RingCluster` (lingkaran konsentris) plus beberapa titik solid, satu warna tinta (`text-foreground`) mengikuti tema, terinspirasi dari referensi poster "Bauhaus 1919" dan pola pipa/ribbon garis paralel yang diberikan user.
+  - Container diubah dari `position: fixed` ke `position: absolute` (dan `body` di `layout.tsx` diberi `position: relative` sebagai containing block) agar background ikut scroll bersama halaman, bukan diam menempel di viewport.
+  - Sempat over-koreksi (density 9 garis + opacity 0.16-0.22 + ribbon cermin ganda) sampai membanjiri kontras judul "One roof." - direvisi ke komposisi yang tetap kaya (beberapa motif tersebar di sepanjang halaman) tapi opacity dikembalikan ke level yang tidak mengganggu keterbacaan (0.09/0.13).
+  - Bug tabrakan di lebar desktop (~900px): bundel garis vertikal pada motif hero memotong langsung baris "Every service welcome." karena ukurannya tetap besar sementara tata letak hero berubah di breakpoint lebar. Diperbaiki dengan mengecilkan & memindahkan motif hero jadi aksen sudut kecil (14rem, disandarkan ke sudut kiri-atas, tidak menjangkau baris kedua headline sama sekali).
+- `src/app/icon.svg`: Sempat dicoba diganti mark geometris Bauhaus (lingkaran/segitiga/kotak solid, lalu versi line-art), tapi dikembalikan ke kanji 宿 sesuai instruksi eksplisit user ("favicon tetep pake kanji") - perubahan Bauhaus diarahkan ke background, bukan favicon. `src/app/favicon.ico` (ikon segitiga default Next.js) dihapus karena digantikan `icon.svg`.
+- `src/app/globals.css`: Menambahkan styling scrollbar bertema (`scrollbar-color`/`scrollbar-width` untuk Firefox, `::-webkit-scrollbar*` untuk Chrome/Edge/Safari) - thumb tipis translucent mengikuti warna foreground, menggantikan scrollbar default OS yang kontras dengan palet krem/indigo.
+- `src/app/docs/page.tsx`: Gerbang admin pada Seksi 4 diperketat - alih-alih menampilkan panel "Admin access required", seksi tersebut (judul dan isinya) kini **sepenuhnya tidak dirender** untuk pengunjung non-admin (`{isAdmin && (...)}`), sehingga halaman terlihat berhenti wajar di Seksi 3 tanpa memberi petunjuk bahwa ada seksi tersembunyi.
+
 ### v0.3.0 - 2026-09-18
 
 Ganti nama proyek dan pembaruan domain:
