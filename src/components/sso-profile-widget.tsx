@@ -6,7 +6,7 @@ import { Shield, ExternalLink, LogOut, ChevronDown, CheckCircle2 } from "lucide-
 import { useSsoSession } from "@/hooks/use-sso-session";
 
 export function SsoProfileWidget() {
-  const { session, login, logout, setDemoSession } = useSsoSession();
+  const { session, login, logout } = useSsoSession();
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -31,15 +31,6 @@ export function SsoProfileWidget() {
         >
           <Shield className="h-3.5 w-3.5" strokeWidth={1.5} />
           <span className="hidden sm:inline">SSO Sign In</span>
-        </button>
-
-        {/* Demo simulation button for UI inspection */}
-        <button
-          onClick={() => setDemoSession(true)}
-          className="hidden sm:inline-flex border border-hairline px-1.5 py-1 text-[10px] font-mono text-foreground/40 hover:text-foreground hover:bg-foreground/5 cursor-pointer"
-          title="Preview UI with an authenticated SSO session"
-        >
-          Simulate Session
         </button>
       </div>
     );

@@ -62,26 +62,9 @@ export function useSsoSession() {
     }
   }, []);
 
-  const setDemoSession = useCallback((enabled: boolean) => {
-    if (enabled) {
-      const demoUser: UserSession = {
-        name: "Suryatmaja",
-        username: "srytmj",
-        email: "admin@yado.my.id",
-        role: "Owner & Sysadmin",
-      };
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(demoUser));
-      notifyChange();
-    } else {
-      localStorage.removeItem(STORAGE_KEY);
-      notifyChange();
-    }
-  }, []);
-
   return {
     session,
     login,
     logout,
-    setDemoSession,
   };
 }
