@@ -1,5 +1,5 @@
 services:
-  whitearchive:
+  yado:
     build: .
     container_name: yado
     restart: unless-stopped

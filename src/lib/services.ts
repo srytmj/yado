@@ -111,10 +111,26 @@ export const ssoConfig = {
   authorizeUrl: `${process.env.NEXT_PUBLIC_SSO_URL ?? "https://sso.yado.my.id"}/oauth/authorize`,
 };
 
-export function buildSsoLoginUrl() {
+export const PKCE_VERIFIER_KEY = "yado_pkce_verifier";
+export const OAUTH_STATE_KEY = "yado_oauth_state";
+
+export async function buildSsoLoginUrl(): Promise<string> {
+  const { generateRandomString, generateCodeChallenge } = await import("./pkce");
+
+  const verifier = generateRandomString(64);
+  const state = generateRandomString(32);
+  const challenge = await generateCodeChallenge(verifier);
+
+  sessionStorage.setItem(PKCE_VERIFIER_KEY, verifier);
+  sessionStorage.setItem(OAUTH_STATE_KEY, state);
+
   const url = new URL(ssoConfig.authorizeUrl);
   url.searchParams.set("client_id", ssoConfig.clientId);
   url.searchParams.set("response_type", "code");
+  url.searchParams.set("code_challenge", challenge);
+  url.searchParams.set("code_challenge_method", "S256");
+  url.searchParams.set("scope", "profile:read");
+  url.searchParams.set("state", state);
   if (ssoConfig.redirectUri) {
     url.searchParams.set("redirect_uri", ssoConfig.redirectUri);
   }

@@ -49,8 +49,8 @@ export function useSsoSession() {
     window.dispatchEvent(new Event("yado-session-change"));
   };
 
-  const login = useCallback(() => {
-    window.location.href = buildSsoLoginUrl();
+  const login = useCallback(async () => {
+    window.location.href = await buildSsoLoginUrl();
   }, []);
 
   const logout = useCallback(() => {
